@@ -5,9 +5,9 @@
 #ifndef PIC_TOOL_APP_H
 #define PIC_TOOL_APP_H
 
+#include <QtWidgets>
 
 class App {
-
 };
 
 

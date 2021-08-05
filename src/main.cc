@@ -3,8 +3,11 @@
 //
 
 #include <iostream>
+#include <QtWidgets>
 
-int main() {
-    std::cout << "Welcome use pic_tool" << std::endl;
-    return 0;
+int main(int argc, char* argv[]) {
+    QApplication app(argc, argv);
+    QWidget widget;
+    widget.show();
+    return app.exec();
 }
