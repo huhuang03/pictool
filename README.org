@@ -1,0 +1,14 @@
+* TODOS
+** show the soft sketch
+*** choice ui framework.
+**** check the wechat dll ui.
+***** use lua(yes, familiar) to check the ui framework.
+
+2. open the image or choice the previous opened img, and can delete.
+
+* Some boring thing
+qt is free for personal use?
+
+ultlmate++ is what?
+
+wxWidgets is good and powerful?
