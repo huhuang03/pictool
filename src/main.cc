@@ -4,10 +4,12 @@
 
 #include <iostream>
 #include <QtWidgets>
+#include "./ui/main_window.h"
 
 int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
-    QWidget widget;
-    widget.show();
+
+    MainWindow mainWindow;
+    mainWindow.show();
     return app.exec();
 }
