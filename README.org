@@ -40,3 +40,6 @@ CMakeCXXCompilerId.cpp.obj : error LNK2005: "char const * const info_language_di
 CMakeCXXCompilerId.cpp.obj : error LNK2005: main 已经在 CMakeCCompilerId.c.obj 中定义
 main.cc.obj : error LNK2005: main 已经在 CMakeCCompilerId.c.obj 中定义
 pic_tool.exe : fatal error LNK1169: 找到一个或多个多重定义的符
+
+* Links
+https://doc.qt.io/qt-5/qtwidgets-mainwindows-application-example.html
