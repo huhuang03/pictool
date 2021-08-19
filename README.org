@@ -1,5 +1,7 @@
 * TODOS
 ** choice the window. like take screen shot, and can choice client area or all
+*** Some good method to show the capture window?
+
 ** scale the img, with show the guide line, if big enough
 
 
