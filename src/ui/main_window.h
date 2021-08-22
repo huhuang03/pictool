@@ -10,8 +10,15 @@
 
 // I think you can find the QApplication your self.
 class MainWindow: public QMainWindow {
+    Q_OBJECT
 public:
     MainWindow();
+
+private:
+    void createActions();
+
+private slots:
+    void clickedCaptureWindow();
 };
 
 

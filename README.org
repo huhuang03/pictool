@@ -1,4 +1,5 @@
 * TODOS
+** I need a key to invoke some thing.
 ** choice the window. like take screen shot, and can choice client area or all
 *** Some good method to show the capture window?
 
@@ -8,4 +9,5 @@
 * Error
 
 * Links
-https://doc.qt.io/qt-5/qtwidgets-mainwindows-application-example.html
+- https://doc.qt.io/qt-5/qtwidgets-mainwindows-application-example.html
+- https://github.com/greenshot/greenshot

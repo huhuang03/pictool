@@ -10,31 +10,63 @@
 
 const int CAPTURE_THRESHOLD = 1 * 1000;
 
+CaptureWindowManager* CaptureWindowManager::_instance = nullptr;
+
 void CaptureWindowManager::start() {
-    POINT preP;
-    unsigned long prePosTime = 0;
-
-    while (true) {
-        if (GetAsyncKeyState(VK_ESCAPE)) {
-            break;
-        }
-
-        POINT  p;
-        GetCursorPos(&p);
-
-        if (eq(preP, p) && (ms() - prePosTime) > CAPTURE_THRESHOLD) {
-            doCapture();
-            break;
-        } else {
-            preP = p;
-            prePosTime = ms();
-        }
-
-
-        Sleep(100);
-    }
+//    FindWindow();
+    std::cout << "start called" << std::endl;
+//    POINT preP;
+//    unsigned long prePosTime = 0;
+//
+//    while (true) {
+//        if (GetAsyncKeyState(VK_ESCAPE)) {
+//            this->stop();
+//            break;
+//        }
+//
+//        POINT  p;
+//        GetCursorPos(&p);
+//
+//        if (eq(preP, p) && (ms() - prePosTime) > CAPTURE_THRESHOLD) {
+//            doCapture(p);
+//            break;
+//        } else {
+//            preP = p;
+//            prePosTime = ms();
+//        }
+//
+//        Sleep(100);
+//    }
 }
 
-void CaptureWindowManager::doCapture() {
+
+static BOOL CALLBACK enumFindWindow(HWND hwnd, LPARAM param) {
+    char title[1024];
+    GetWindowText(hwnd, (LPSTR)&title, 1023);
+    std::cout << "window name: " << title << std::endl;
+    return true;
+}
+
+void CaptureWindowManager::doCapture(const POINT &p) {
+    if (eq(this->prePos, p)) {
+        return;
+    }
+
+    this->prePos.x = p.x;
+    this->prePos.y = p.y;
     std::cout << "do capture" << std::endl;
+
+    EnumWindows(enumFindWindow, 0);
+}
+
+void CaptureWindowManager::stop() {
+    this->prePos.x = -1;
+    this->prePos.y = -1;
+}
+
+CaptureWindowManager *CaptureWindowManager::inst() {
+    if (_instance == nullptr) {
+        _instance = new CaptureWindowManager();
+    }
+    return _instance;
 }
