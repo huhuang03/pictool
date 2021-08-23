@@ -10,11 +10,14 @@
 
 const int CAPTURE_THRESHOLD = 1 * 1000;
 
+const std::string AppFrameWindowClass = "ApplicationFrameWindow";
+
 CaptureWindowManager* CaptureWindowManager::_instance = nullptr;
 
 void CaptureWindowManager::start() {
-//    FindWindow();
-    std::cout << "start called" << std::endl;
+    // ?? how to do this? 1??
+    auto window = FindWindow(AppFrameWindowClass.c_str(), nullptr);
+    std::cout << "start called, mainWindow: " << window << std::endl;
 //    POINT preP;
 //    unsigned long prePosTime = 0;
 //
