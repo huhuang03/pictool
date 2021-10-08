@@ -15,6 +15,7 @@ public:
     App();
 
 private:
+    void createDockers();
     void createActions();
 
 private slots:

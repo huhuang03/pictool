@@ -7,8 +7,10 @@
 #include <QtWidgets>
 #include <QWidget>
 
-class HSVFilterView: QWidget {
-
+class HSVFilterView: public QWidget {
+    Q_OBJECT
+public:
+    HSVFilterView( QWidget* aParent = Q_NULLPTR);
 };
 
 

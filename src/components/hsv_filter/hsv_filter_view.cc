@@ -3,3 +3,7 @@
 //
 
 #include "hsv_filter_view.h"
+
+HSVFilterView::HSVFilterView(QWidget *parent)
+    : QWidget(parent) {
+}
