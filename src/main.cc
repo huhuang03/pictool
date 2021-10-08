@@ -2,7 +2,7 @@
 // Created by huhua on 2021/7/28.
 //
 
-#include <QtWidgets>
+#include <QApplication>
 #include "./ui/main_window.h"
 
 int main(int argc, char* argv[]) {

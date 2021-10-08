@@ -11,9 +11,5 @@ class HSVFilterView: QWidget {
 
 };
 
-class HSVFilterView {
-
-};
-
 
 #endif //PIC_TOOL_HSV_FILTER_VIEW_H
