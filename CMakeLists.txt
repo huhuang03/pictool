@@ -1,15 +1,13 @@
 cmake_minimum_required(VERSION 3.12)
-set(CMAKE_AUTOMOC ON)
-set(CMAKE_AUTORCC ON)
-set(CMAKE_AUTOUIC ON)
+if (NOT DEFINED ENV{VCPKG_ROOT})
+    message(FATAL_ERROR Please set the vcpkg_root env)
+else()
+    if (NOT DEFINED CMAKE_TOOLCHAIN_FILE)
+        set(CMAKE_TOOLCHAIN_FILE "$ENV{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake")
+    endif()
+endif()
 
-project(pic_tool)
-
-
-find_package(Qt5 COMPONENTS Widgets REQUIRED)
-
+project(pictool)
 
 add_subdirectory(external/easybot)
 add_subdirectory(src)
-
-target_link_libraries(pic_tool Qt5::Widgets)
