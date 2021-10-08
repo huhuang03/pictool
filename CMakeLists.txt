@@ -5,10 +5,11 @@ set(CMAKE_AUTOUIC ON)
 
 project(pic_tool)
 
-FILE(GLOB_RECURSE SRC src/*.cc src/*.h src/*.hpp src/*.cpp src/*.c)
 
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 
-add_executable(pic_tool ${SRC})
+
+add_subdirectory(external/easybot)
+add_subdirectory(src)
 
 target_link_libraries(pic_tool Qt5::Widgets)

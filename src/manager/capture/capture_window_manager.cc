@@ -76,6 +76,11 @@ BOOL CALLBACK _doCaptureInnerEnumWindows(HWND hwnd, LPARAM param) {
     if (!IsWindowVisible(hwnd)) {
         return true;
     }
+
+    if (IsIconic(hwnd)) {
+        return true;
+    }
+
     RECT rect;
     GetWindowRect(hwnd, &rect);
 
