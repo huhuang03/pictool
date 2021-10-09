@@ -6,4 +6,5 @@
 
 HSVFilterView::HSVFilterView(QWidget *parent)
     : QWidget(parent) {
+    // how to do this??
 }
