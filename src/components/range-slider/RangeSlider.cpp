@@ -1,6 +1,7 @@
 
 #include "RangeSlider.h"
 #include <QDebug>
+#include <iostream>
 
 namespace
 {
@@ -13,6 +14,7 @@ const int scLeftRightMargin = 1;
 
 RangeSlider::RangeSlider(QWidget* aParent)
     : QWidget(aParent),
+      type(DoubleHandles),
       mMinimum(0),
       mMaximum(100),
       mLowerValue(0),
@@ -73,13 +75,18 @@ void RangeSlider::paintEvent(QPaintEvent* aEvent)
     QBrush handleBrush(QColor(0xFA, 0xFA, 0xFA));
     painter.setBrush(handleBrush);
     QRectF leftHandleRect = firstHandleRect();
-    if(type.testFlag(LeftHandle))
+
+    if(type.testFlag(LeftHandle)) {
+//        std::cout << "draw Left handle called" << std::endl;
         painter.drawRoundedRect(leftHandleRect, 2, 2);
+    }
 
     // Second value handle rect
     QRectF rightHandleRect = secondHandleRect();
-    if(type.testFlag(RightHandle))
+    if(type.testFlag(RightHandle)) {
+//        std::cout << "draw right handle called" << std::endl;
         painter.drawRoundedRect(rightHandleRect, 2, 2);
+    }
 
     // Handles
     painter.setRenderHint(QPainter::Antialiasing, false);
