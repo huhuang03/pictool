@@ -15,6 +15,7 @@ static RangeSlider* createRangeSlider(int min, int max) {
 HSVFilterView::HSVFilterView(QWidget *parent)
     : QWidget(parent) {
     this->h = createRangeSlider(eb::HSV::H_MIN, eb::HSV::H_MAX);
+    this->h->SetCanOver(true);
     this->s = createRangeSlider(eb::HSV::S_MIN, eb::HSV::S_MAX);
     this->v = createRangeSlider(eb::HSV::V_MIN, eb::HSV::V_MAX);
 

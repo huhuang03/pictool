@@ -28,7 +28,8 @@ RangeSlider::RangeSlider(Qt::Orientation ori, Options t, QWidget* aParent)
       mBackgroudColorDisabled(Qt::darkGray),
       mBackgroudColor(mBackgroudColorEnabled),
       orientation(ori),
-      type(t)
+      type(t),
+      canOver(false)
 {
     setMouseTracking(true);
 }
@@ -84,8 +85,12 @@ void RangeSlider::paintEvent(QPaintEvent* aEvent)
         selectedRect.setBottom((type.testFlag(RightHandle) ? rightHandleRect.top() : rightHandleRect.bottom()) - 0.5);
     }
 
-    this->drawSelect(painter, backgroundRect, type.testFlag(LeftHandle) ? leftHandleRect.right() : leftHandleRect.left(),
-                     type.testFlag(RightHandle) ? rightHandleRect.left() : rightHandleRect.right());
+    if (this->mLowerValue <= mUpperValue) {
+        this->drawSelect(painter, backgroundRect, mLowerValue, mUpperValue);
+    } else {
+        this->drawSelect(painter, backgroundRect,mMinimum, mUpperValue);
+        this->drawSelect(painter, backgroundRect, mLowerValue, mMaximum);
+    }
 }
 
 QRectF RangeSlider::firstHandleRect() const
@@ -167,7 +172,7 @@ void RangeSlider::mouseMoveEvent(QMouseEvent* aEvent)
 
         if(mFirstHandlePressed && type.testFlag(LeftHandle))
         {
-            if(posValue - mDelta + scHandleSideLength / 2 <= secondHandleRectPosValue)
+            if(canOver || (posValue - mDelta + scHandleSideLength / 2 <= secondHandleRectPosValue))
             {
                 setLowerValue((posValue - mDelta - scLeftRightMargin - scHandleSideLength / 2) * 1.0 / validLength() * mInterval + mMinimum);
             }
@@ -178,7 +183,9 @@ void RangeSlider::mouseMoveEvent(QMouseEvent* aEvent)
         }
         else if(mSecondHandlePressed && type.testFlag(RightHandle))
         {
-            if(firstHandleRectPosValue + scHandleSideLength * (type.testFlag(DoubleHandles) ? 1.5 : 0.5) <= posValue - mDelta)
+            if(canOver
+                || (firstHandleRectPosValue + scHandleSideLength * (type.testFlag(DoubleHandles) ? 1.5 : 0.5) <= posValue - mDelta)
+                )
             {
                 setUpperValue((posValue - mDelta - scLeftRightMargin - scHandleSideLength / 2 - (type.testFlag(DoubleHandles) ? scHandleSideLength : 0)) * 1.0 / validLength() * mInterval + mMinimum);
             }
@@ -353,23 +360,35 @@ void RangeSlider::SetRange(int aMinimum, int mMaximum)
 
 /**
  * In here, you are draw by the hand, not the lower and upper. so I will change.
+ * // fuck, I need use the lower and upper to determinate the pos.
  */
-void RangeSlider::drawSelect(QPainter &painter, QRectF &backgroundRect, double lower, double upper) {
+void RangeSlider::drawSelect(QPainter &painter, QRectF &backgroundRect, int lower, int upper) const {
     QBrush selectedBrush(mBackgroudColor);
     painter.setBrush(selectedBrush);
 
     QRectF selectedRect(backgroundRect);
 
+    auto lowerPos = this->getLeftByValue(lower);
+    auto upperPos = this->getLeftByValue(upper);
     if(orientation == Qt::Horizontal) {
         // why + 0.5?
-        selectedRect.setLeft(lower + 0.5);
-        selectedRect.setRight(upper - 0.5);
+        selectedRect.setLeft(lowerPos);
+        selectedRect.setRight(upperPos);
     } else {
-        selectedRect.setTop(lower + 0.5);
-        selectedRect.setBottom(upper - 0.5);
+        // lower + 0.5 and upper - 0.5
+        selectedRect.setTop(lowerPos);
+        selectedRect.setBottom(upperPos);
     }
 
     painter.drawRect(selectedRect);
 }
 
+// this name is not good, because it's maybe only suitable for draw selection.
+double RangeSlider::getLeftByValue(int value) const {
+    // 0.5 is the line length.
+    return scLeftRightMargin + (value - mMinimum * 1.0) / mInterval * validLength() + scHandleSideLength - 0.5;
+}
 
+void RangeSlider::SetCanOver(bool pCanOver) {
+    this->canOver = pCanOver;
+}

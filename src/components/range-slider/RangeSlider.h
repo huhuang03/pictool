@@ -41,6 +41,8 @@ public:
 
     void SetRange(int aMinimum, int aMaximum);
 
+    void SetCanOver(bool canOver);
+
 protected:
     void paintEvent(QPaintEvent* aEvent) override;
     void mousePressEvent(QMouseEvent* aEvent) override;
@@ -86,7 +88,8 @@ private:
 
     // helper method;
 private:
-    void drawSelect(QPainter &painter, QRectF &backgroundRect, double lower, double upper);
+    void drawSelect(QPainter &painter, QRectF &backgroundRect, int lower, int upper) const;
+    double getLeftByValue(int value) const;
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(RangeSlider::Options)
