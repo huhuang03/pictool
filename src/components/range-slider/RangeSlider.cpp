@@ -88,6 +88,7 @@ void RangeSlider::paintEvent(QPaintEvent* aEvent)
     if (this->mLowerValue <= mUpperValue) {
         this->drawSelect(painter, backgroundRect, mLowerValue, mUpperValue);
     } else {
+        // TODO: if you have some time, you can try draw the bar empty space.
         this->drawSelect(painter, backgroundRect,mMinimum, mUpperValue);
         this->drawSelect(painter, backgroundRect, mLowerValue, mMaximum);
     }
