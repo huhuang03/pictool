@@ -13,22 +13,7 @@ const int scLeftRightMargin = 1;
 }
 
 RangeSlider::RangeSlider(QWidget* aParent)
-    : QWidget(aParent),
-      type(DoubleHandles),
-      mMinimum(0),
-      mMaximum(100),
-      mLowerValue(0),
-      mUpperValue(100),
-      mFirstHandlePressed(false),
-      mSecondHandlePressed(false),
-      mInterval(mMaximum - mMinimum),
-      mBackgroudColorEnabled(QColor(0x1E, 0x90, 0xFF)),
-      mBackgroudColorDisabled(Qt::darkGray),
-      mBackgroudColor(mBackgroudColorEnabled),
-      orientation(Qt::Horizontal)
-{
-    setMouseTracking(true);
-}
+    : RangeSlider(Qt::Horizontal, DoubleHandles, aParent) {}
 
 RangeSlider::RangeSlider(Qt::Orientation ori, Options t, QWidget* aParent)
     : QWidget(aParent),
@@ -98,9 +83,9 @@ void RangeSlider::paintEvent(QPaintEvent* aEvent)
         selectedRect.setTop((type.testFlag(LeftHandle) ? leftHandleRect.bottom() : leftHandleRect.top()) + 0.5);
         selectedRect.setBottom((type.testFlag(RightHandle) ? rightHandleRect.top() : rightHandleRect.bottom()) - 0.5);
     }
-    QBrush selectedBrush(mBackgroudColor);
-    painter.setBrush(selectedBrush);
-    painter.drawRect(selectedRect);
+
+    this->drawSelect(painter, backgroundRect, type.testFlag(LeftHandle) ? leftHandleRect.right() : leftHandleRect.left(),
+                     type.testFlag(RightHandle) ? rightHandleRect.left() : rightHandleRect.right());
 }
 
 QRectF RangeSlider::firstHandleRect() const
@@ -288,6 +273,7 @@ void RangeSlider::setLowerValue(int aLowerValue)
 
     mLowerValue = aLowerValue;
     emit lowerValueChanged(mLowerValue);
+    emit valueChanged(mLowerValue, mUpperValue);
 
     update();
 }
@@ -306,6 +292,7 @@ void RangeSlider::setUpperValue(int aUpperValue)
 
     mUpperValue = aUpperValue;
     emit upperValueChanged(mUpperValue);
+    emit valueChanged(mLowerValue, mUpperValue);
 
     update();
 }
@@ -363,3 +350,26 @@ void RangeSlider::SetRange(int aMinimum, int mMaximum)
     setMinimum(aMinimum);
     setMaximum(mMaximum);
 }
+
+/**
+ * In here, you are draw by the hand, not the lower and upper. so I will change.
+ */
+void RangeSlider::drawSelect(QPainter &painter, QRectF &backgroundRect, double lower, double upper) {
+    QBrush selectedBrush(mBackgroudColor);
+    painter.setBrush(selectedBrush);
+
+    QRectF selectedRect(backgroundRect);
+
+    if(orientation == Qt::Horizontal) {
+        // why + 0.5?
+        selectedRect.setLeft(lower + 0.5);
+        selectedRect.setRight(upper - 0.5);
+    } else {
+        selectedRect.setTop(lower + 0.5);
+        selectedRect.setBottom(upper - 0.5);
+    }
+
+    painter.drawRect(selectedRect);
+}
+
+

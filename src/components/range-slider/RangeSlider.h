@@ -19,6 +19,7 @@ public:
         RightHandle = 0x2,
         DoubleHandles = LeftHandle | RightHandle
     };
+
     Q_DECLARE_FLAGS(Options, Option)
 
     RangeSlider( QWidget* aParent = Q_NULLPTR);
@@ -54,6 +55,7 @@ protected:
 signals:
     void lowerValueChanged(int aLowerValue);
     void upperValueChanged(int aUpperValue);
+    void valueChanged(int lower, int upper);
     void rangeChanged(int aMin, int aMax);
 
 public slots:
@@ -67,6 +69,7 @@ private:
     float currentPercentage();
     int validLength() const;
 
+    bool canOver;
     int mMinimum;
     int mMaximum;
     int mLowerValue;
@@ -80,6 +83,10 @@ private:
     QColor mBackgroudColor;
     Qt::Orientation orientation;
     Options type;
+
+    // helper method;
+private:
+    void drawSelect(QPainter &painter, QRectF &backgroundRect, double lower, double upper);
 };
 
 Q_DECLARE_OPERATORS_FOR_FLAGS(RangeSlider::Options)
