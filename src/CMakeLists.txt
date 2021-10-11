@@ -10,6 +10,7 @@ add_library(pictool_lib ${SRC_LIB})
 find_package(Qt5 COMPONENTS Widgets REQUIRED)
 # fuck, why you can't find the include path?
 target_link_libraries(pictool_lib Qt5::Widgets easybot)
+target_include_directories(pictool_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 
 add_executable(pictool ${SRC_LIB} main.cc)
 # so the link library can pass?
