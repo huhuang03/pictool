@@ -4,6 +4,7 @@
 
 
 #include <pic_tool/pic_too.h>
+#include "ui/app.h"
 
 void pt::open(cv::Mat img) {
     App app;
