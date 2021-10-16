@@ -88,3 +88,7 @@ void App::loadImage(const std::string &path) {
     centralView->loadImage(img);
 }
 
+void App::onHsvRangeChanged(eb::HSVRange hsvRange) {
+    std::cout << "hsvRange: " << hsvRange << std::endl;
+}
+

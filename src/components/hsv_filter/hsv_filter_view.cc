@@ -31,8 +31,10 @@ HSVFilterView::HSVFilterView(QWidget *parent)
     this->h->SetCanOver(true);
     this->s = createRangeSlider(layout, eb::HSV::S_MIN, eb::HSV::S_MAX, "s: ");
     this->v = createRangeSlider(layout, eb::HSV::V_MIN, eb::HSV::V_MAX, "v: ");
+}
 
-//    layout->addWidget(this->h);
-//    layout->addWidget(this->s);
-//    layout->addWidget(this->v);
+eb::HSVRange HSVFilterView::range() {
+    return eb::HSVRange(
+            eb::HSV(this->h->GetLowerValue(), this->s->GetLowerValue(), this->v->GetLowerValue()),
+            eb::HSV(this->h->GetUpperValue(), this->s->GetUpperValue(), this->v->GetUpperValue()));
 }

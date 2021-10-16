@@ -7,11 +7,16 @@
 #include <QtWidgets>
 #include <QWidget>
 #include "../range-slider/RangeSlider.h"
+#include <easybot/model/hsv_range.h>
 
 class HSVFilterView: public QWidget {
     Q_OBJECT
 public:
-    HSVFilterView( QWidget* aParent = Q_NULLPTR);
+    HSVFilterView(QWidget* aParent = Q_NULLPTR);
+    eb::HSVRange range();
+
+    signals:
+    void hsvRangeChange(eb::HSVRange range);
 
 private:
     RangeSlider* h;

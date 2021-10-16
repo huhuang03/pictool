@@ -9,6 +9,7 @@
 #include "./components/central_view/central_view.h"
 
 #include <opencv2/opencv.hpp>
+#include <easybot/model/hsv_range.h>
 
 // I think you can find the QApplication your self.
 class App: public QMainWindow {
@@ -20,6 +21,7 @@ public:
 private slots:
     void clickedCaptureWindow();
     void open();
+    void onHsvRangeChanged(eb::HSVRange hsvRange);
 
 private:
     static App* _inst;
