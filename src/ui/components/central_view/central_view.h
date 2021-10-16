@@ -9,6 +9,8 @@
 #include <QWidget>
 #include <QLabel>
 
+typedef void (*ImgAlerter)(cv::Mat in, cv::OutputArray out);
+
 /**
  * Can we just just show the image for now.
  */
@@ -20,10 +22,15 @@ public:
 
     void loadImage(cv::Mat pImg);
 
+    void addImgAlter(ImgAlerter alerter);
+
+    void updateImg();
+
 private:
-    cv::Mat cvImg;
+    cv::Mat originImg;
     QImage *qImg;
     QLabel *label;
+    std::vector<ImgAlerter> alters;
 };
 
 

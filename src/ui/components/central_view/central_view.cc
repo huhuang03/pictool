@@ -8,15 +8,39 @@
 #include <QDebug>
 #include <QVBoxLayout>
 
+static const int WIDTH = 800;
+static const int HEIGHT = 600;
+
 CentralView::CentralView(QWidget *parent): QWidget(parent)
 , label(new QLabel) {
+    resize(WIDTH, HEIGHT);
+    // so you can auto resize??
     auto layout = new QVBoxLayout();
     this->setLayout(layout);
+    // label size can be more than pixmap??
     layout->addWidget(label);
 }
 
 void CentralView::loadImage(cv::Mat img) {
-    this->cvImg = std::move(img);
-    // why? exception??
-    this->label->setPixmap(QPixmap::fromImage(QImage((unsigned char*) this->cvImg.data, this->cvImg.cols, this->cvImg.rows, QImage::Format_BGR888)));
+    this->originImg = std::move(img);
+    this->updateImg();
+}
+
+void CentralView::addImgAlter(ImgAlerter alerter) {
+    this->alters.push_back(alerter);
+}
+
+void CentralView::updateImg() {
+    if (this->originImg.empty()) {
+        return;
+    }
+
+    cv::Mat curImg = this->originImg;
+    for (const auto &alter: this->alters) {
+        cv::Mat outImg;
+        alter(curImg, outImg);
+        curImg = outImg;
+    }
+
+    this->label->setPixmap(QPixmap::fromImage(QImage((unsigned char*) this->originImg.data, this->originImg.cols, this->originImg.rows, QImage::Format_BGR888)));
 }

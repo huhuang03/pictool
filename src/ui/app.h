@@ -28,6 +28,10 @@ private:
     void createActions();
     void createMenu();
     CentralView *centralView;
+
+    // helper method
+private:
+    void loadImage(const std::string &path);
 };
 
 
