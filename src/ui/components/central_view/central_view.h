@@ -8,13 +8,15 @@
 #include <opencv2/opencv.hpp>
 #include <QWidget>
 #include <QLabel>
+#include <functional>
 
-typedef void (*ImgAlerter)(cv::Mat in, cv::OutputArray out);
+typedef std::function<void (cv::InputArray in, cv::OutputArray out)> ImgAlerter;
+
 
 /**
  * Can we just just show the image for now.
  */
-class CentralView : public QWidget{
+class CentralView : public QWidget {
     Q_OBJECT
 
 public:

@@ -18,10 +18,17 @@ public:
     signals:
     void hsvRangeChange(eb::HSVRange range);
 
+public slots:
+    void handleSingleHSVChanged(int lower, int upper);
+
 private:
     RangeSlider* h;
     RangeSlider* s;
     RangeSlider* v;
+
+    // helper method
+private:
+    RangeSlider* createRangeSlider(QLayout *layout, int min, int max, const QString& title);
 };
 
 

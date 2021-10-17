@@ -10,6 +10,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <easybot/model/hsv_range.h>
+#include "../components/hsv_filter/hsv_filter_view.h"
 
 // I think you can find the QApplication your self.
 class App: public QMainWindow {
@@ -30,6 +31,8 @@ private:
     void createActions();
     void createMenu();
     CentralView *centralView;
+    HSVFilterView *hsvFilterView;
+
 
     // helper method
 private:

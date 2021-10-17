@@ -42,5 +42,5 @@ void CentralView::updateImg() {
         curImg = outImg;
     }
 
-    this->label->setPixmap(QPixmap::fromImage(QImage((unsigned char*) this->originImg.data, this->originImg.cols, this->originImg.rows, QImage::Format_BGR888)));
+    this->label->setPixmap(QPixmap::fromImage(QImage((unsigned char*) curImg.data, curImg.cols, curImg.rows, QImage::Format_BGR888)));
 }

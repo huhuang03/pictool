@@ -22,6 +22,10 @@ App::App(): centralView(new CentralView) {
     this->createDockers();
     this->createMenu();
     this->loadImage("C:/Users/huhua/Pictures/bb.bmp");
+
+    this->centralView->addImgAlter([this](cv::InputArray src, cv::OutputArray dst) {
+        this->hsvFilterView->range().work(src, dst);
+    });
 }
 
 void App::clickedCaptureWindow() {
@@ -33,8 +37,10 @@ void App::createActions() {
 
 void App::createDockers() {
     auto dockHsvFilter = new QDockWidget(tr("hsv"), this);
-    dockHsvFilter->setWidget(new HSVFilterView());
+    this->hsvFilterView = new HSVFilterView();
+    dockHsvFilter->setWidget(hsvFilterView);
     addDockWidget(Qt::BottomDockWidgetArea, dockHsvFilter);
+    connect(hsvFilterView, &HSVFilterView::hsvRangeChange, this, &App::onHsvRangeChanged);
 }
 
 void App::createMenu() {
@@ -89,6 +95,7 @@ void App::loadImage(const std::string &path) {
 }
 
 void App::onHsvRangeChanged(eb::HSVRange hsvRange) {
-    std::cout << "hsvRange: " << hsvRange << std::endl;
+//    std::cout << "hsvRange: " << hsvRange << std::endl;
+    this->centralView->updateImg();
 }
 
