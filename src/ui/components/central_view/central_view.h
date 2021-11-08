@@ -9,6 +9,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <functional>
+#include "./components/central_image.h"
 
 typedef std::function<void (cv::InputArray in, cv::OutputArray out)> ImgAlerter;
 
@@ -31,7 +32,7 @@ public:
 private:
     cv::Mat originImg;
     QImage *qImg;
-    QLabel *label;
+    CentralImage *uiImg;
     std::vector<ImgAlerter> alters;
 };
 

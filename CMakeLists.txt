@@ -9,5 +9,6 @@ endif()
 
 project(pictool)
 
-add_subdirectory(external/easybot)
+add_subdirectory(../easybot easybot)
+#add_subdirectory(external/easybot)
 add_subdirectory(src)

@@ -6,19 +6,18 @@
 #include <QLayout>
 #include <utility>
 #include <QDebug>
-#include <QVBoxLayout>
 
 static const int WIDTH = 800;
 static const int HEIGHT = 600;
 
 CentralView::CentralView(QWidget *parent): QWidget(parent)
-, label(new QLabel) {
+, uiImg(new CentralImage()) {
     resize(WIDTH, HEIGHT);
     // so you can auto resize??
     auto layout = new QVBoxLayout();
     this->setLayout(layout);
     // label size can be more than pixmap??
-    layout->addWidget(label);
+    layout->addWidget(uiImg);
 }
 
 void CentralView::loadImage(cv::Mat img) {
@@ -42,5 +41,5 @@ void CentralView::updateImg() {
         curImg = outImg;
     }
 
-    this->label->setPixmap(QPixmap::fromImage(QImage((unsigned char*) curImg.data, curImg.cols, curImg.rows, QImage::Format_BGR888)));
+    this->uiImg->setPixmap(QPixmap::fromImage(QImage((unsigned char*) curImg.data, curImg.cols, curImg.rows, QImage::Format_BGR888)));
 }
