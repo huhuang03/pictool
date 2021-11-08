@@ -6,6 +6,8 @@
 #include <QLayout>
 #include <utility>
 #include <QDebug>
+#include <QScrollArea>
+#include "../../../module/size_config.h"
 
 static const int WIDTH = 800;
 static const int HEIGHT = 600;
@@ -14,10 +16,16 @@ CentralView::CentralView(QWidget *parent): QWidget(parent)
 , uiImg(new CentralImage()) {
     resize(WIDTH, HEIGHT);
     // so you can auto resize??
+    auto scrollArea = new QScrollArea();
+    scrollArea->setWidget(uiImg);
+    uiImg->resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
+    scrollArea->setFixedSize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
+
     auto layout = new QVBoxLayout();
     this->setLayout(layout);
     // label size can be more than pixmap??
-    layout->addWidget(uiImg);
+    layout->addWidget(scrollArea);
+
 }
 
 void CentralView::loadImage(cv::Mat img) {

@@ -6,7 +6,6 @@
 #include "../module/size_config.h"
 #include "../manager/capture/capture_window_manager.h"
 #include <QtWidgets>
-#include "../components/hsv_filter/hsv_filter_view.h"
 #include <pic_tool/settings/setting.h>
 
 App* App::_inst = nullptr;

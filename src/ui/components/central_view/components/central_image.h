@@ -12,6 +12,11 @@ class CentralImage: public QLabel {
 protected:
     void mouseMoveEvent(QMouseEvent *ev) override;
 
+    void wheelEvent(QWheelEvent *event) override;
+
+private:
+    double scale;
+
 public:
     CentralImage(QWidget *parent = nullptr);
 };

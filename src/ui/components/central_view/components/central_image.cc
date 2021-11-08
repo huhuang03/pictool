@@ -6,11 +6,45 @@
 #include <iostream>
 #include <QMouseEvent>
 
+// can I set you fixed size but scale the content with scroll??
 CentralImage::CentralImage(QWidget *parent): QLabel(parent) {
-
+    setMouseTracking(true);
+    setScaledContents(true);
+    this->scale = 1.0;
+    // ok, we now simple the most scale range is 0 - 5;
 }
 
 void CentralImage::mouseMoveEvent(QMouseEvent *ev) {
     QLabel::mouseMoveEvent(ev);
-    std::cout << "ev: " << ev->x() << ", " << ev->y() << std::endl;
+//    if (this->hasFocus()) {
+        std::cout << "ev: " << ev->x() << ", " << ev->y() << std::endl;
+//    }
+}
+
+void CentralImage::wheelEvent(QWheelEvent *event) {
+    QWidget::wheelEvent(event);
+    int y = event->angleDelta().y();
+
+    // seems will stock when scroll too big.
+    // I want to crop the image??
+    if (y != 0) {
+        auto isBigger = y < 0;
+
+        // width: 812, height: 663
+        // now let's try to get a size.
+        auto width = this->size().width();
+        auto height = this->size().height();
+
+        if (isBigger) {
+            scale = 1.2;
+        } else {
+            scale = 1 / 1.2;
+        }
+
+        // let try scale??
+        this->resize(width * scale, height * scale);
+
+        // seems will stock when scroll too big.
+        std::cout << "width: " << width << ", height: " << height << std::endl;
+    }
 }
