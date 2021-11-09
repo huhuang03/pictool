@@ -1,8 +1,5 @@
 * TODOS
-** I need a key to invoke some thing.
-** choice the window. like take screen shot, and can choice client area or all
-*** Some good method to show the capture window?
-
+** crop the image.
 ** scale the img, with show the guide line, if big enough
 
 

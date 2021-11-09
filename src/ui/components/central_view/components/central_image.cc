@@ -11,13 +11,17 @@ CentralImage::CentralImage(QWidget *parent): QLabel(parent) {
     setMouseTracking(true);
     setScaledContents(true);
     this->scale = 1.0;
+    this->isDragging = false;
     // ok, we now simple the most scale range is 0 - 5;
 }
 
 void CentralImage::mouseMoveEvent(QMouseEvent *ev) {
     QLabel::mouseMoveEvent(ev);
-//    if (this->hasFocus()) {
+    if (this->isDragging) {
+    } else {
         std::cout << "ev: " << ev->x() << ", " << ev->y() << std::endl;
+    }
+//    if (this->hasFocus()) {
 //    }
 }
 
@@ -47,4 +51,16 @@ void CentralImage::wheelEvent(QWheelEvent *event) {
         // seems will stock when scroll too big.
         std::cout << "width: " << width << ", height: " << height << std::endl;
     }
+}
+
+void CentralImage::mousePressEvent(QMouseEvent *ev) {
+    QLabel::mousePressEvent(ev);
+    this->isDragging = true;
+    this->dragStartPoint = ev->pos();
+}
+
+void CentralImage::mouseReleaseEvent(QMouseEvent *ev) {
+    QLabel::mouseReleaseEvent(ev);
+    this->isDragging = false;
+    // ok get the region
 }

@@ -12,10 +12,16 @@ class CentralImage: public QLabel {
 protected:
     void mouseMoveEvent(QMouseEvent *ev) override;
 
+    void mousePressEvent(QMouseEvent *ev) override;
+
+    void mouseReleaseEvent(QMouseEvent *ev) override;
+
     void wheelEvent(QWheelEvent *event) override;
 
 private:
     double scale;
+    bool isDragging;
+    QPoint dragStartPoint;
 
 public:
     CentralImage(QWidget *parent = nullptr);

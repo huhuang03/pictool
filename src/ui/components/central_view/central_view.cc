@@ -25,7 +25,6 @@ CentralView::CentralView(QWidget *parent): QWidget(parent)
     this->setLayout(layout);
     // label size can be more than pixmap??
     layout->addWidget(scrollArea);
-
 }
 
 void CentralView::loadImage(cv::Mat img) {
