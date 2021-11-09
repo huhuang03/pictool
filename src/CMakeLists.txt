@@ -12,6 +12,10 @@ find_package(Qt5 COMPONENTS Widgets REQUIRED)
 target_link_libraries(pictool_lib Qt5::Widgets easybot)
 target_include_directories(pictool_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 
+# use boost??
+#find_package(Boost REQUIRED COMPONENTS filesystem)
+#target_link_libraries(pictool_lib PRIVATE Boost::filesystem)
+
 add_executable(pictool ${SRC_LIB} main.cc)
 # so the link library can pass?
 target_link_libraries(pictool pictool_lib)

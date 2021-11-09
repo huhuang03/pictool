@@ -20,7 +20,12 @@ App::App(): centralView(new CentralView) {
     this->createActions();
     this->createDockers();
     this->createMenu();
-    this->loadImage("C:/Users/huhua/Pictures/bb.bmp");
+
+    auto path = "C:/Users/huhua/Pictures/bb.bmp";
+    path = "C:/Users/hwf/Pictures/bb.bmp";
+//    if (!boost::file)
+    // can I check the path exist.
+    this->loadImage(path);
 
     this->centralView->addImgAlter([this](cv::InputArray src, cv::OutputArray dst) {
         this->hsvFilterView->range().work(src, dst);

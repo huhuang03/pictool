@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.12)
+
+# so you still not work??
+# still can't find the right x64??
 if (NOT DEFINED ENV{VCPKG_ROOT})
     message(FATAL_ERROR Please set the vcpkg_root env)
 else()
