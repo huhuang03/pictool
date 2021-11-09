@@ -23,8 +23,10 @@ CentralView::CentralView(QWidget *parent): QWidget(parent)
 
     auto layout = new QVBoxLayout();
     this->setLayout(layout);
-    // label size can be more than pixmap??
+
     layout->addWidget(scrollArea);
+
+    // add the op button like cv plot.
 }
 
 void CentralView::loadImage(cv::Mat img) {
