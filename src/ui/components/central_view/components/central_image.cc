@@ -64,3 +64,4 @@ void CentralImage::mouseReleaseEvent(QMouseEvent *ev) {
     this->isDragging = false;
     // ok get the region
 }
+

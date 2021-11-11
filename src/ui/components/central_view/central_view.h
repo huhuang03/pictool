@@ -34,6 +34,8 @@ private:
     QImage *qImg;
     CentralImage *uiImg;
     std::vector<ImgAlerter> alters;
+
+    void initToolLayout(QLayout *parentLayout);
 };
 
 

@@ -8,6 +8,8 @@
 #include <QDebug>
 #include <QScrollArea>
 #include "../../../module/size_config.h"
+#include "./components/check_state_button.h"
+#include <pic_tool/global.h>
 
 static const int WIDTH = 800;
 static const int HEIGHT = 600;
@@ -25,8 +27,7 @@ CentralView::CentralView(QWidget *parent): QWidget(parent)
     this->setLayout(layout);
 
     layout->addWidget(scrollArea);
-
-    // ok, add the op buttons.
+    this->initToolLayout(layout);
 }
 
 
@@ -52,4 +53,11 @@ void CentralView::updateImg() {
     }
 
     this->uiImg->setPixmap(QPixmap::fromImage(QImage((unsigned char*) curImg.data, curImg.cols, curImg.rows, QImage::Format_BGR888)));
+}
+
+void CentralView::initToolLayout(QLayout *parentLayout) {
+    auto container = new QWidget();
+    auto layoutTools = new QHBoxLayout();
+    auto btCrop = new CheckStateButton(gAwesome->icon(fa::crop));
+    parentLayout->addWidget(container);
 }
