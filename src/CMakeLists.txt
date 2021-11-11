@@ -18,5 +18,5 @@ target_include_directories(pictool_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../in
 
 add_executable(pictool ${SRC_LIB} main.cc)
 # so the link library can pass?
-target_link_libraries(pictool pictool_lib)
+target_link_libraries(pictool pictool_lib QtAwesome)
 

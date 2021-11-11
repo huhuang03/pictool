@@ -12,6 +12,6 @@ endif()
 
 project(pictool)
 
+add_subdirectory(../QtAwesome/QtAwesome QtAwesome)
 add_subdirectory(../easybot easybot)
-#add_subdirectory(external/easybot)
 add_subdirectory(src)

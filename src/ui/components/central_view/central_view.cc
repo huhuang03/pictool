@@ -26,8 +26,9 @@ CentralView::CentralView(QWidget *parent): QWidget(parent)
 
     layout->addWidget(scrollArea);
 
-    // add the op button like cv plot.
+    // ok, add the op buttons.
 }
+
 
 void CentralView::loadImage(cv::Mat img) {
     this->originImg = std::move(img);
