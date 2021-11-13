@@ -10,26 +10,27 @@
 #include "../../../module/size_config.h"
 #include "./components/check_state_button.h"
 #include <pic_tool/global.h>
+#include "../../app.h"
 
-static const int WIDTH = 800;
-static const int HEIGHT = 600;
-
+// how to present the global thing?
+// recycle import is ok??
 CentralView::CentralView(QWidget *parent): QWidget(parent)
 , uiImg(new CentralImage()) {
-    resize(WIDTH, HEIGHT);
+
     // so you can auto resize??
     auto scrollArea = new QScrollArea();
     scrollArea->setWidget(uiImg);
     uiImg->resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
-    scrollArea->setFixedSize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
+    // so the size is not enough??
+    int extraPadding = 30;
+    scrollArea->setFixedSize(SIZE_IMG_AREA_W + extraPadding, SIZE_IMG_AREA_H + extraPadding);
 
-    auto layout = new QVBoxLayout();
-    this->setLayout(layout);
+    auto rootLayout = new QVBoxLayout();
+    this->setLayout(rootLayout);
 
-    layout->addWidget(scrollArea);
-    this->initToolLayout(layout);
+    rootLayout->addWidget(scrollArea);
+    this->initToolLayout(rootLayout);
 }
-
 
 void CentralView::loadImage(cv::Mat img) {
     this->originImg = std::move(img);
@@ -57,7 +58,18 @@ void CentralView::updateImg() {
 
 void CentralView::initToolLayout(QLayout *parentLayout) {
     auto container = new QWidget();
-    auto layoutTools = new QHBoxLayout();
-    auto btCrop = new CheckStateButton(gAwesome->icon(fa::crop));
+    auto layoutTools = new QHBoxLayout(container);
+    if (App::awesome == nullptr) {
+        App::awesome = new QtAwesome(this);
+        App::awesome->initFontAwesome();
+    }
+
+    auto btCrop = new CheckStateButton(App::awesome->icon(fa::crop), "Hello");
+    layoutTools->addWidget(btCrop);
+
+    layoutTools->addWidget(new QPushButton(App::awesome->icon(fa::crop), "hello 2"));
+
+    layoutTools->addWidget(new QPushButton("hello 1"));
+
     parentLayout->addWidget(container);
 }

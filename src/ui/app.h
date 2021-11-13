@@ -7,6 +7,7 @@
 #include <QWidget>
 #include <QMainWindow>
 #include "./components/central_view/central_view.h"
+#include <QtAwesome.h>
 
 #include <opencv2/opencv.hpp>
 #include <easybot/model/hsv_range.h>
@@ -18,6 +19,8 @@ class App: public QMainWindow {
 public:
     App();
     static App* inst();
+    // yes, if you are a static in App, then you are an external
+    static QtAwesome *awesome;
 
 private slots:
     void clickedCaptureWindow();

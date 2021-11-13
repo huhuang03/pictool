@@ -9,6 +9,7 @@
 #include <pic_tool/settings/setting.h>
 
 App* App::_inst = nullptr;
+QtAwesome *App::awesome = nullptr;
 
 App::App(): centralView(new CentralView) {
     settingInit(this);

@@ -8,7 +8,7 @@
 
 int main(int argc, char* argv[]) {
     QApplication q(argc, argv);
-    gAwesome = new QtAwesome(&q);
+//    gAwesome = new QtAwesome(&q);
     App app;
     app.show();
     return q.exec();

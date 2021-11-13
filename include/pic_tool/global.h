@@ -7,6 +7,7 @@
 
 #include <QtAwesome.h>
 
-QtAwesome *gAwesome;
+//QtAwesome *gAwesome;
+//int *m;
 
 #endif //PICTOOL_GLOBAL_H
