@@ -1,4 +1,6 @@
 * TODOS
+** persistant the opened image path. with search.
+
 ** crop the image.
 ** scale the img, with show the guide line, if big enough
 
