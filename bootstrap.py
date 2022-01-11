@@ -3,7 +3,7 @@ import subprocess
 
 
 # 初始化设备
-
+# need root auth?
 def init_dependency(github_url: str):
     name = github_url.split('/')[-1]
     if github_url.endswith('/'):
@@ -17,11 +17,10 @@ def init_dependency(github_url: str):
 
     if not os.path.exists(repo_path):
         subprocess.run(['git', 'clone', github_url], cwd=repo_root_path)
-    # ok, make the link
-    print(repo_path)
-    print(name)
+    command = f'New-Item -Path {name} -ItemType SymbolicLink -Value {repo_path}'
+    print('command: ', command)
     # New-Item -Path C:\LinkDir -ItemType SymbolicLink -Value F:\RealDir
-    subprocess.run(['powershell', '-Command', f'New-Item -Path {repo_path} -ItemType SymbolicLink -Value {name}'])
+    subprocess.run(['powershell', '-Command', command], cwd=os.path.abspath('.'))
 
 
 init_dependency("https://github.com/huhuang03/QtAwesome")

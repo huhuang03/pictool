@@ -1,4 +1,7 @@
 * TODOS
+** 模仿matplot的图片操作功能
+crop其实为Image缩放和移动的功能。你觉得是不是
+
 ** persistant the opened image path. with search.
 
 ** crop the image.
