@@ -9,7 +9,7 @@
 #include <QWidget>
 #include <QLabel>
 #include <functional>
-#include "./components/central_image.h"
+#include "center_image_view.h"
 
 typedef std::function<void (cv::InputArray in, cv::OutputArray out)> ImgAlerter;
 
@@ -17,11 +17,11 @@ typedef std::function<void (cv::InputArray in, cv::OutputArray out)> ImgAlerter;
 /**
  * Can we just just show the image for now.
  */
-class CentralView : public QWidget {
+class MainPanel : public QWidget {
     Q_OBJECT
 
 public:
-    explicit CentralView(QWidget *parent = nullptr);
+    explicit MainPanel(QWidget *parent = nullptr);
 
     void loadImage(cv::Mat pImg);
 
@@ -32,7 +32,7 @@ public:
 private:
     cv::Mat originImg;
     QImage *qImg;
-    CentralImage *uiImg;
+    CenterImageView *centerImage;
     std::vector<ImgAlerter> alters;
 
     void initToolLayout(QLayout *parentLayout);

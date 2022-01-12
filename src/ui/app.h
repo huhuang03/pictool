@@ -6,7 +6,7 @@
 #define PIC_TOOL_MAIN_WINDOW_H
 #include <QWidget>
 #include <QMainWindow>
-#include "./components/central_view/central_view.h"
+#include "./panel/main/main_panel.h"
 #include <QtAwesome.h>
 
 #include <opencv2/opencv.hpp>
@@ -33,7 +33,7 @@ private:
     void createDockers();
     void createActions();
     void createMenu();
-    CentralView *centralView;
+    MainPanel *panelMain;
     HSVFilterView *hsvFilterView;
 
 

@@ -2,30 +2,29 @@
 // Created by huhua on 2021/11/7.
 //
 
-#include "central_image.h"
+#include "center_image_view.h"
 #include <iostream>
 #include <QMouseEvent>
 
+// look like auto complete is not working at here.
 // can I set you fixed size but scale the content with scroll??
-CentralImage::CentralImage(QWidget *parent): QLabel(parent) {
-    setMouseTracking(true);
-    setScaledContents(true);
-    this->scale = 1.0;
-    this->isDragging = false;
-    // ok, we now simple the most scale range is 0 - 5;
+CenterImageView::CenterImageView(QWidget *parent): QLabel(parent) {
+  setMouseTracking(true);
+  setScaledContents(true);
+  this->scale = 1.0;
+  this->isDragging = false;
+  // ok, we now simple the most scale range is 0 - 5;
 }
 
-void CentralImage::mouseMoveEvent(QMouseEvent *ev) {
+void CenterImageView::mouseMoveEvent(QMouseEvent *ev) {
     QLabel::mouseMoveEvent(ev);
     if (this->isDragging) {
     } else {
         std::cout << "ev: " << ev->x() << ", " << ev->y() << std::endl;
     }
-//    if (this->hasFocus()) {
-//    }
 }
 
-void CentralImage::wheelEvent(QWheelEvent *event) {
+void CenterImageView::wheelEvent(QWheelEvent *event) {
     QWidget::wheelEvent(event);
     int y = event->angleDelta().y();
 
@@ -53,13 +52,14 @@ void CentralImage::wheelEvent(QWheelEvent *event) {
     }
 }
 
-void CentralImage::mousePressEvent(QMouseEvent *ev) {
-    QLabel::mousePressEvent(ev);
-    this->isDragging = true;
-    this->dragStartPoint = ev->pos();
+void CenterImageView::mousePressEvent(QMouseEvent *ev) {
+  QLabel::mousePressEvent(ev);
+  this->isDragging = true;
+  this->dragStartPoint = ev->pos();
+
 }
 
-void CentralImage::mouseReleaseEvent(QMouseEvent *ev) {
+void CenterImageView::mouseReleaseEvent(QMouseEvent *ev) {
     QLabel::mouseReleaseEvent(ev);
     this->isDragging = false;
     // ok get the region

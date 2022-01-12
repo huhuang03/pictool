@@ -11,12 +11,12 @@
 App* App::_inst = nullptr;
 QtAwesome *App::awesome = nullptr;
 
-App::App(): centralView(new CentralView) {
+App::App(): panelMain(new MainPanel) {
     settingInit(this);
     App::_inst = this;
     resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
 
-    setCentralWidget(this->centralView);
+    setCentralWidget(this->panelMain);
 
     this->createActions();
     this->createDockers();
@@ -28,7 +28,7 @@ App::App(): centralView(new CentralView) {
     // can I check the path exist.
     this->loadImage(path);
 
-    this->centralView->addImgAlter([this](cv::InputArray src, cv::OutputArray dst) {
+    this->panelMain->addImgAlter([this](cv::InputArray src, cv::OutputArray dst) {
         this->hsvFilterView->range().work(src, dst);
     });
 }
@@ -96,11 +96,11 @@ void App::loadImage(const std::string &path) {
         qDebug() << "why img is empty";
         return;
     }
-    centralView->loadImage(img);
+    panelMain->loadImage(img);
 }
 
 void App::onHsvRangeChanged(eb::HSVRange hsvRange) {
 //    std::cout << "hsvRange: " << hsvRange << std::endl;
-    this->centralView->updateImg();
+    this->panelMain->updateImg();
 }
 

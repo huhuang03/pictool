@@ -2,25 +2,26 @@
 // Created by huhua on 2021/10/12.
 //
 
-#include "central_view.h"
+#include "main_panel.h"
 #include <QLayout>
 #include <utility>
 #include <QDebug>
 #include <QScrollArea>
 #include "../../../module/size_config.h"
-#include "./components/check_state_button.h"
-#include <pic_tool/global.h>
+#include "../central_view/components/check_state_button.h"
+#include "pic_tool/global.h"
 #include "../../app.h"
+#include <QToolButton>
 
 // how to present the global thing?
 // recycle import is ok??
-CentralView::CentralView(QWidget *parent): QWidget(parent)
-, uiImg(new CentralImage()) {
+MainPanel::MainPanel(QWidget *parent): QWidget(parent)
+, centerImage(new CenterImageView()) {
 
     // so you can auto resize??
     auto scrollArea = new QScrollArea();
-    scrollArea->setWidget(uiImg);
-    uiImg->resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
+    scrollArea->setWidget(centerImage);
+    centerImage->resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
     // so the size is not enough??
     int extraPadding = 30;
     scrollArea->setFixedSize(SIZE_IMG_AREA_W + extraPadding, SIZE_IMG_AREA_H + extraPadding);
@@ -30,18 +31,19 @@ CentralView::CentralView(QWidget *parent): QWidget(parent)
 
     rootLayout->addWidget(scrollArea);
     this->initToolLayout(rootLayout);
+
 }
 
-void CentralView::loadImage(cv::Mat img) {
+void MainPanel::loadImage(cv::Mat img) {
     this->originImg = std::move(img);
     this->updateImg();
 }
 
-void CentralView::addImgAlter(ImgAlerter alerter) {
+void MainPanel::addImgAlter(ImgAlerter alerter) {
     this->alters.push_back(alerter);
 }
 
-void CentralView::updateImg() {
+void MainPanel::updateImg() {
     if (this->originImg.empty()) {
         return;
     }
@@ -53,10 +55,10 @@ void CentralView::updateImg() {
         curImg = outImg;
     }
 
-    this->uiImg->setPixmap(QPixmap::fromImage(QImage((unsigned char*) curImg.data, curImg.cols, curImg.rows, QImage::Format_BGR888)));
+    this->centerImage->setPixmap(QPixmap::fromImage(QImage((unsigned char*) curImg.data, curImg.cols, curImg.rows, QImage::Format_BGR888)));
 }
 
-void CentralView::initToolLayout(QLayout *parentLayout) {
+void MainPanel::initToolLayout(QLayout *parentLayout) {
     auto container = new QWidget();
     auto layoutTools = new QHBoxLayout(container);
     if (App::awesome == nullptr) {
@@ -72,6 +74,11 @@ void CentralView::initToolLayout(QLayout *parentLayout) {
     layoutTools->addWidget(new QPushButton(App::awesome->icon(fa::crop), "hello 2"));
 
     layoutTools->addWidget(new QPushButton("hello 1"));
+
+    // how to set the
+    auto btCrop1 = new QToolButton();
+    btCrop1->setCheckable(true);
+    layoutTools->addWidget(btCrop1);
 
     parentLayout->addWidget(container);
 }

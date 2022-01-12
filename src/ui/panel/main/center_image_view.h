@@ -7,8 +7,16 @@
 
 #include <QLabel>
 
-class CentralImage: public QLabel {
+/**
+ * Let's first impl the roi.
+ */
+class CenterImageView: public QLabel {
     Q_OBJECT
+ public:
+  enum Mode {
+    roi,
+    move,
+  };
 protected:
     void mouseMoveEvent(QMouseEvent *ev) override;
 
@@ -22,9 +30,11 @@ private:
     double scale;
     bool isDragging;
     QPoint dragStartPoint;
+    Mode mode;
 
 public:
-    CentralImage(QWidget *parent = nullptr);
+  QPointF roiStart;
+  explicit CenterImageView(QWidget *parent = nullptr);
 };
 
 
