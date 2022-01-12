@@ -66,17 +66,9 @@ void MainPanel::initToolLayout(QLayout *parentLayout) {
         App::awesome->initFontAwesome();
     }
 
-    // so you can show again??
-    auto btCrop = new CheckStateButton(App::awesome->icon(fa::crop), "Hello");
-    layoutTools->addWidget(btCrop);
-
-    layoutTools->addWidget(new CheckStateButton(App::awesome->icon(fa::crop), "hello 1"));
-    layoutTools->addWidget(new QPushButton(App::awesome->icon(fa::crop), "hello 2"));
-
-    layoutTools->addWidget(new QPushButton("hello 1"));
-
     // how to set the
     auto btCrop1 = new QToolButton();
+    btCrop1->setIcon(App::awesome->icon(fa::search));
     btCrop1->setCheckable(true);
     layoutTools->addWidget(btCrop1);
 
