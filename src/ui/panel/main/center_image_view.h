@@ -18,6 +18,7 @@ class CenterImageView: public QLabel {
     move,
   };
 protected:
+  // so the key is what pos is you?
     void mouseMoveEvent(QMouseEvent *ev) override;
 
     void mousePressEvent(QMouseEvent *ev) override;
