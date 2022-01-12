@@ -6,6 +6,8 @@
 #define PICTOOL_CENTRAL_IMAGE_H
 
 #include <QLabel>
+#include <QGraphicsScene>
+#include <QPixmap>
 
 /**
  * Let's first impl the roi.

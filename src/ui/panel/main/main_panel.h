@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <functional>
 #include "center_image_view.h"
+#include "./graphic_image_view.h"
 
 typedef std::function<void (cv::InputArray in, cv::OutputArray out)> ImgAlerter;
 
@@ -32,7 +33,9 @@ public:
 private:
     cv::Mat originImg;
     QImage *qImg;
-    CenterImageView *centerImage;
+//    CenterImageView *centerImage;
+  GraphicImageView *centerImage;
+//    QGraphi *centerImage;
     std::vector<ImgAlerter> alters;
 
     void initToolLayout(QLayout *parentLayout);

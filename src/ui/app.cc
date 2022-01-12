@@ -23,7 +23,9 @@ App::App(): panelMain(new MainPanel) {
     this->createMenu();
 
     auto path = "C:/Users/huhua/Pictures/bb.bmp";
-    path = "C:/Users/hwf/Pictures/bb.bmp";
+//    path = "C:/Users/hwf/Pictures/bb.bmp";
+// 1920 x 1920
+    path = "C:/Users/hwf/Pictures/bbb.jpeg";
 //    if (!boost::file)
     // can I check the path exist.
     this->loadImage(path);

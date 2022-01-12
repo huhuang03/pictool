@@ -16,22 +16,21 @@
 // how to present the global thing?
 // recycle import is ok??
 MainPanel::MainPanel(QWidget *parent): QWidget(parent)
-, centerImage(new CenterImageView()) {
+//, centerImage(new CenterImageView()) {
+, centerImage(new GraphicImageView()) {
 
     // so you can auto resize??
-    auto scrollArea = new QScrollArea();
-    scrollArea->setWidget(centerImage);
+//    auto scrollArea = new QScrollArea();
+//    scrollArea->setWidget(centerImage);
     centerImage->resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
     // so the size is not enough??
-    int extraPadding = 30;
-    scrollArea->setFixedSize(SIZE_IMG_AREA_W + extraPadding, SIZE_IMG_AREA_H + extraPadding);
+//    scrollArea->setFixedSize(SIZE_IMG_AREA_W + extraPadding, SIZE_IMG_AREA_H + extraPadding);
 
     auto rootLayout = new QVBoxLayout();
     this->setLayout(rootLayout);
 
-    rootLayout->addWidget(scrollArea);
+    rootLayout->addWidget(centerImage);
     this->initToolLayout(rootLayout);
-
 }
 
 void MainPanel::loadImage(cv::Mat img) {
