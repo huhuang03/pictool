@@ -89,19 +89,23 @@ QPointF GraphicImageView::posToOrigin(const QPoint &pos) {
 }
 
 void GraphicImageView::updateImageBySelect(QRectF selectRect) {
-  auto pixmap = this->item->pixmap();
 // scale 之后的size是多少？
   auto dstSize = this->size();
   qDebug() << " dst size: " << dstSize << ", selectSize: " << selectRect;
 //  qDebug() << "graphicScene size: " << this->item
-  this->_scale = std::min(
+  auto scale = std::min(
       dstSize.width()  / selectRect.width(),
       dstSize.height() / selectRect.height());
+  this->_scale = scale;
+//  this->_scale = scale / this->_scale;
 
   qDebug() << "_scale: " << this->_scale;
 
   this->translate(selectRect.x(), selectRect.y());
   // why scale cause initial (0, 0) change?
+  // 主要是注意这里可以连续scale的。
+  // why not work?
+  // 为什么又不起作用了？
   this->scale(_scale, _scale);
 }
 
