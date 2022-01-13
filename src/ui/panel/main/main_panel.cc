@@ -22,7 +22,7 @@ MainPanel::MainPanel(QWidget *parent): QWidget(parent)
     // so you can auto resize??
 //    auto scrollArea = new QScrollArea();
 //    scrollArea->setWidget(centerImage);
-    centerImage->resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
+    centerImage->setFixedSize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
     // so the size is not enough??
 //    scrollArea->setFixedSize(SIZE_IMG_AREA_W + extraPadding, SIZE_IMG_AREA_H + extraPadding);
 

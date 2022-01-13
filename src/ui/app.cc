@@ -14,7 +14,7 @@ QtAwesome *App::awesome = nullptr;
 App::App(): panelMain(new MainPanel) {
     settingInit(this);
     App::_inst = this;
-    resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
+//    resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
 
     setCentralWidget(this->panelMain);
 

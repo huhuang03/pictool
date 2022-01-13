@@ -41,12 +41,15 @@ void GraphicImageView::setPixmap(const QPixmap &pixmap) {
   updateImage();
 }
 
+// the image is not right.
 void GraphicImageView::updateImage() {
   auto pixmap = this->item->pixmap();
 
+  // look like this size is not right.
   auto thisSize = this->size();
   qDebug() << " pixmap's size: " << pixmap.size() << ", thisSize: " << thisSize;
-  this->_scale = std::max(
+//  qDebug() << "graphicScene size: " << this->item
+  this->_scale = std::min(
       thisSize.width() * 1.0 / pixmap.size().width(),
       thisSize.height() * 1.0 / pixmap.size().height());
 
