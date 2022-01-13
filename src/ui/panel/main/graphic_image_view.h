@@ -17,10 +17,13 @@
 class GraphicImageView: public QGraphicsView {
  private:
   QGraphicsPixmapItem *item;
-  void updateImage();
+  void updateImageBySelect(QRectF selectRect);
   double _scale;
   QRect *_selectRect;
   QGraphicsRectItem *_selectItem;
+  // not useful, actually.
+  QPointF _selectStartPos;
+  QPointF _selectStopPos;
 
   /**
    * 点击事件的位置，变化为GraphicScene上的坐标
@@ -34,7 +37,6 @@ class GraphicImageView: public QGraphicsView {
   void mousePressEvent(QMouseEvent *event) override;
   void mouseMoveEvent(QMouseEvent *event) override;
   void mouseReleaseEvent(QMouseEvent *event) override;
-
 
 
  public:

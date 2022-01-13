@@ -18,48 +18,28 @@ GraphicImageView::GraphicImageView(QWidget *parent)
 : QGraphicsView(parent), _scale(1.0) {
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+  setAlignment(Qt::AlignLeft | Qt::AlignTop);
+
+  auto *group = new QGraphicsItemGroup;
+
   auto *graphicScene = new QGraphicsScene();
   this->setScene(graphicScene);
   this->item = new QGraphicsPixmapItem();
-
-//  this->_selectItem = new QGraphicsRectItem();
-//  this->_selectRect->setRect(0, 0, 100, 100);
-//  QPen pen(Qt::black);
-//  this->_selectRect = graphicScene->addRect(0, 0, 0, 0, pen);
-//  this->_selectItem->setRect(this->_selectRect);
-  // this seems not work?
-  graphicScene->addItem(this->item);
+  group->addToGroup(this->item);
 
   this->_selectItem = new QGraphicsRectItem();
-  this->_selectRect = new QRect(0, 0, 100, 100);
+  this->_selectRect = new QRect(0, 0, 700, 700);
   this->_selectItem->setRect(*this->_selectRect);
-  graphicScene->addItem(this->_selectItem);
+  group->addToGroup(this->_selectItem);
+
+  graphicScene->addItem(group);
 }
 
 void GraphicImageView::setPixmap(const QPixmap &pixmap) {
   this->item->setPixmap(pixmap);
-  updateImage();
+  this->updateImageBySelect(QRectF(QPointF(0, 0), pixmap.size()));
 }
 
-// the image is not right.
-void GraphicImageView::updateImage() {
-  auto pixmap = this->item->pixmap();
-
-  // look like this size is not right.
-  auto thisSize = this->size();
-  qDebug() << " pixmap's size: " << pixmap.size() << ", thisSize: " << thisSize;
-//  qDebug() << "graphicScene size: " << this->item
-  this->_scale = std::min(
-      thisSize.width() * 1.0 / pixmap.size().width(),
-      thisSize.height() * 1.0 / pixmap.size().height());
-
-  qDebug() << "_scale: " << this->_scale;
-
-  // for test.
-//  scale = scale * 1.5;
-//  scale = 1;
-  this->scale(_scale, _scale);
-}
 void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
   QGraphicsView::mouseDoubleClickEvent(event);
 }
@@ -67,25 +47,30 @@ void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
 void GraphicImageView::mousePressEvent(QMouseEvent *event) {
   QGraphicsView::mousePressEvent(event);
 //  qDebug() << "click at: " << event;
-  auto realPos = this->posToOrigin(event->pos());
+  this->_selectStartPos = this->posToOrigin(event->pos());
 
-  _selectRect->setRect((int)std::floor(realPos.x()), (int)std::floor(realPos.y()), 0, 0);
+  _selectRect->setRect((int)std::floor(this->_selectStartPos.x()),
+                       (int)std::floor(this->_selectStartPos.y()), 0, 0);
+  _selectRect->setRect(0, 0, 100, 100);
   _selectItem->setRect(*this->_selectRect);
 //  qDebug() << "down rect: " << *_selectRect;
 }
 
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
   QGraphicsView::mouseMoveEvent(event);
-  auto pos = posToOrigin(event->pos());
+  this->_selectStopPos = posToOrigin(event->pos());
 //  qDebug() << "move rect: " << *_selectRect;
-  _selectRect->setRight((int)std::ceil(pos.x()));
-  _selectRect->setBottom((int)std::ceil(pos.y()));
+  _selectRect->setRight((int)std::ceil(this->_selectStopPos.x()));
+  _selectRect->setBottom((int)std::ceil(this->_selectStopPos.y()));
   _selectItem->setRect(*this->_selectRect);
 }
 
 void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
   QGraphicsView::mouseReleaseEvent(event);
 
+
+  QRectF rect(*this->_selectRect);
+  this->updateImageBySelect(rect);
   _selectRect->setRect(0, 0, 0, 0);
   _selectItem->setRect(*this->_selectRect);
 }
@@ -102,3 +87,21 @@ QPointF GraphicImageView::posToOrigin(const QPoint &pos) {
   auto tmpY = yScroll + pos.y();
   return {tmpX / this->_scale, tmpY / this->_scale};
 }
+
+void GraphicImageView::updateImageBySelect(QRectF selectRect) {
+  auto pixmap = this->item->pixmap();
+// scale 之后的size是多少？
+  auto dstSize = this->size();
+  qDebug() << " dst size: " << dstSize << ", selectSize: " << selectRect;
+//  qDebug() << "graphicScene size: " << this->item
+  this->_scale = std::min(
+      dstSize.width()  / selectRect.width(),
+      dstSize.height() / selectRect.height());
+
+  qDebug() << "_scale: " << this->_scale;
+
+  this->translate(selectRect.x(), selectRect.y());
+  // why scale cause initial (0, 0) change?
+  this->scale(_scale, _scale);
+}
+
