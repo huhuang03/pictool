@@ -8,6 +8,7 @@
 #include <QGraphicsView>
 #include <QGraphicsPixmapItem>
 #include <QGraphicsRectItem>
+#include <QRectF>
 
 /**
  * 图片住的View
@@ -20,6 +21,12 @@ class GraphicImageView: public QGraphicsView {
   double _scale;
   QRect *_selectRect;
   QGraphicsRectItem *_selectItem;
+
+  /**
+   * 点击事件的位置，变化为GraphicScene上的坐标
+   * @return
+   */
+  QPointF posToOrigin(const QPoint& pos);
 
 
  protected:

@@ -63,32 +63,20 @@ void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
 
 void GraphicImageView::mousePressEvent(QMouseEvent *event) {
   QGraphicsView::mousePressEvent(event);
-  qDebug() << "click at: " << event;
-  // ok, let's try calc the real pos
-  auto xScroll = this->horizontalScrollBar()->value();
-  auto yScroll = this->verticalScrollBar()->value();
+//  qDebug() << "click at: " << event;
+  auto realPos = this->posToOrigin(event->pos());
 
-  // we need the pos on scene
-  auto tmpX = xScroll + event->x();
-  auto tmpY = yScroll + event->y();
-//  qDebug() << "real pos(before scale): " << tmpX << ", " << tmpY;
-//  qDebug() << "real pos: " << tmpX / this->_scale << ", " << tmpY / this->_scale;
-//  _selectRect->setLeft(tmpX);
-//  _selectRect->setTop(tmpY);
-//  _selectRect->setRight(tmpX);
-//  _selectRect->setBottom(tmpY);
-  _selectRect->setRect(tmpX, tmpY, 0, 0);
+  _selectRect->setRect((int)std::floor(realPos.x()), (int)std::floor(realPos.y()), 0, 0);
   _selectItem->setRect(*this->_selectRect);
+//  qDebug() << "down rect: " << *_selectRect;
 }
 
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
   QGraphicsView::mouseMoveEvent(event);
-  auto xScroll = this->horizontalScrollBar()->value();
-  auto yScroll = this->verticalScrollBar()->value();
-  auto tmpX = xScroll + event->x();
-  auto tmpY = yScroll + event->y();
-  _selectRect->setRight(tmpX);
-  _selectRect->setBottom(tmpY);
+  auto pos = posToOrigin(event->pos());
+//  qDebug() << "move rect: " << *_selectRect;
+  _selectRect->setRight((int)std::ceil(pos.x()));
+  _selectRect->setBottom((int)std::ceil(pos.y()));
   _selectItem->setRect(*this->_selectRect);
 }
 
@@ -97,4 +85,17 @@ void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
 
   _selectRect->setRect(0, 0, 0, 0);
   _selectItem->setRect(*this->_selectRect);
+}
+
+/**
+ * 虽然返回一个对象，实际是由传入函数传递指针进来。
+ */
+QPointF GraphicImageView::posToOrigin(const QPoint &pos) {
+  auto xScroll = this->horizontalScrollBar()->value();
+  auto yScroll = this->verticalScrollBar()->value();
+
+  // we need the pos on scene
+  auto tmpX = xScroll + pos.x();
+  auto tmpY = yScroll + pos.y();
+  return {tmpX / this->_scale, tmpY / this->_scale};
 }
