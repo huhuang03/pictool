@@ -1,6 +1,5 @@
 * TODOS
-** 模仿matplot的图片操作功能
-crop其实为Image缩放和移动的功能。你觉得是不是
+- 增加移动时候的emit事件(坐标，bgr)
 
 ** persistant the opened image path. with search.
 

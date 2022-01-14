@@ -8,6 +8,7 @@
 #include <opencv2/opencv.hpp>
 #include <QWidget>
 #include <QLabel>
+#include <QLabel>
 #include <functional>
 #include "center_image_view.h"
 #include "./graphic_image_view.h"
@@ -19,7 +20,9 @@ typedef std::function<void (cv::InputArray in, cv::OutputArray out)> ImgAlerter;
  * Can we just just show the image for now.
  */
 class MainPanel : public QWidget {
-    Q_OBJECT
+  Q_OBJECT;
+private slots:
+  void onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color);
 
 public:
     explicit MainPanel(QWidget *parent = nullptr);
@@ -31,14 +34,13 @@ public:
     void updateImg();
 
 private:
-    cv::Mat originImg;
-    QImage *qImg;
-//    CenterImageView *centerImage;
+  QLabel *lbStatus;
+  cv::Mat originImg;
+  QImage *qImg;
   GraphicImageView *centerImage;
-//    QGraphi *centerImage;
-    std::vector<ImgAlerter> alters;
+  std::vector<ImgAlerter> alters;
 
-    void initToolLayout(QLayout *parentLayout);
+  void initToolLayout(QLayout *parentLayout);
 };
 
 

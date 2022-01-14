@@ -10,6 +10,8 @@
 #include <QScrollBar>
 #include <QRect>
 
+static int CROP_THRESHOLD = 10;
+
 // pixmap's size:  QSize(618, 330) , thisSize:  QSize(800, 600)
 // click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=751,289, screenPos=1323,537)
 // click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=754,292, screenPos=1326,540)
@@ -62,19 +64,17 @@ void GraphicImageView::mousePressEvent(QMouseEvent *event) {
   } else {
     return;
   }
-//  qDebug() << "click at: " << event;
   this->_selectStartPos = this->mapToScene(event->pos());
 
   _selectRect->setRect((int)std::floor(this->_selectStartPos.x()),
                        (int)std::floor(this->_selectStartPos.y()), 0, 0);
-//  _selectRect->setRect(0, 0, 100, 100);
   _selectItem->setRect(*this->_selectRect);
-//  qDebug() << "down rect: " << *_selectRect;
 }
 
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
-  qDebug() << "mouseMoveEvent: " << event;
+//  qDebug() << "mouseMoveEvent: " << event;
   QGraphicsView::mouseMoveEvent(event);
+  emit onMove(this->mapToScene(event->pos()).toPoint(), cv::Scalar_<uint8_t>(255, 0, 0));
 
   if (!isSelecting()) {
     return;
@@ -121,6 +121,9 @@ void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
  * selectRect is rect on scene
  */
 void GraphicImageView::updateImageBySelect(QRectF selectRect) {
+  if (selectRect.width() < CROP_THRESHOLD || selectRect.height() < CROP_THRESHOLD) {
+    return;
+  }
 // scale 之后的size是多少？
   auto dstSize = this->size();
   qDebug() << " dst size: " << dstSize << ", selectSize: " << selectRect;
@@ -145,5 +148,16 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
   this->horizontalScrollBar()->setValue((int)transX);
   this->verticalScrollBar()->setValue((int)transY);
   this->scale(_scale, _scale);
+}
+
+void GraphicImageView::forward() {
+  auto rect = this->_selectPops.top();
+  this->updateSceneRect(rect);
+  this->_selects.push(rect);
+  this->_selects.pop();
+}
+
+void GraphicImageView::backward() {
+
 }
 
