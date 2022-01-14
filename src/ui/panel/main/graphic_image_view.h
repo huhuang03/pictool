@@ -9,6 +9,7 @@
 #include <QGraphicsPixmapItem>
 #include <QGraphicsRectItem>
 #include <QRectF>
+#include "op_mode.h"
 
 /**
  * 图片住的View
@@ -24,12 +25,21 @@ class GraphicImageView: public QGraphicsView {
   // not useful, actually.
   QPointF _selectStartPos;
   QPointF _selectStopPos;
-
+  OpMode mode;
   /**
-   * 点击事件的位置，变化为GraphicScene上的坐标
-   * @return
+   * 是否在选择中
    */
-  QPointF posToOrigin(const QPoint& pos);
+  bool _isSelecting;
+
+//  /**
+//   * 点击事件的位置，变化为GraphicScene上的坐标
+//   * @return
+//   */
+//  QPointF posToOrigin(const QPoint& pos);
+
+  inline bool isSelecting() {
+    return _isSelecting;
+  };
 
 
  protected:
@@ -42,6 +52,9 @@ class GraphicImageView: public QGraphicsView {
  public:
   explicit GraphicImageView(QWidget *parent = nullptr);
   void setPixmap(const QPixmap &pixmap);
+  inline void setMode(OpMode _mode) {
+    this->mode = _mode;
+  }
 };
 
 #endif //PICTOOL_SRC_UI_PANEL_MAIN_GRAPHIC_IMAGE_VIEW_H_

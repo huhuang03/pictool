@@ -14,9 +14,17 @@
 // click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=751,289, screenPos=1323,537)
 // click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=754,292, screenPos=1326,540)
 // ok the loc pos is the GraphicImageView's current loc.
-// https://stackoverflow.com/questions/14610568/how-to-use-the-qgraphicsviews-translate-function
+//
+/**
+ * 首先我们
+ * monthEvent中的坐标：为什么坐标呢。
+ *
+ * Links: https://stackoverflow.com/questions/14610568/how-to-use-the-qgraphicsviews-translate-function
+ * @param parent
+ */
 GraphicImageView::GraphicImageView(QWidget *parent)
-: QGraphicsView(parent), _scale(1.0) {
+: QGraphicsView(parent), _scale(1.0), mode(OpMode::POI) {
+  setMouseTracking(true);
 //  this->setTransformationAnchor(QGraphicsView::NoAnchor);
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -30,7 +38,7 @@ GraphicImageView::GraphicImageView(QWidget *parent)
   group->addToGroup(this->item);
 
   this->_selectItem = new QGraphicsRectItem();
-  this->_selectRect = new QRect(0, 0, 700, 700);
+  this->_selectRect = new QRect(0, 0, 0, 0);
   this->_selectItem->setRect(*this->_selectRect);
   group->addToGroup(this->_selectItem);
 
@@ -49,8 +57,13 @@ void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
 // so what's the event pos?
 void GraphicImageView::mousePressEvent(QMouseEvent *event) {
   QGraphicsView::mousePressEvent(event);
+  if (mode == OpMode::POI) {
+    this->_isSelecting = true;
+  } else {
+    return;
+  }
 //  qDebug() << "click at: " << event;
-  this->_selectStartPos = this->posToOrigin(event->pos());
+  this->_selectStartPos = this->mapToScene(event->pos());
 
   _selectRect->setRect((int)std::floor(this->_selectStartPos.x()),
                        (int)std::floor(this->_selectStartPos.y()), 0, 0);
@@ -60,8 +73,13 @@ void GraphicImageView::mousePressEvent(QMouseEvent *event) {
 }
 
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
+  qDebug() << "mouseMoveEvent: " << event;
   QGraphicsView::mouseMoveEvent(event);
-  this->_selectStopPos = posToOrigin(event->pos());
+
+  if (!isSelecting()) {
+    return;
+  }
+  this->_selectStopPos = this->mapToScene(event->pos());
 //  qDebug() << "move rect: " << *_selectRect;
   _selectRect->setRight((int)std::ceil(this->_selectStopPos.x()));
   _selectRect->setBottom((int)std::ceil(this->_selectStopPos.y()));
@@ -71,25 +89,33 @@ void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
 void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
   QGraphicsView::mouseReleaseEvent(event);
 
-
+  if (!isSelecting()) {
+    return;
+  }
+  this->_isSelecting = false;
   QRectF rect(*this->_selectRect);
   this->updateImageBySelect(rect);
   _selectRect->setRect(0, 0, 0, 0);
   _selectItem->setRect(*this->_selectRect);
 }
 
-/**
- * 虽然返回一个对象，实际是由传入函数传递指针进来。
- */
-QPointF GraphicImageView::posToOrigin(const QPoint &pos) {
-  auto xScroll = this->horizontalScrollBar()->value();
-  auto yScroll = this->verticalScrollBar()->value();
-
-  // we need the pos on scene
-  auto tmpX = xScroll + pos.x();
-  auto tmpY = yScroll + pos.y();
-  return {tmpX / this->_scale, tmpY / this->_scale};
-}
+///**
+// * 虽然返回一个对象，实际是由传入函数传递指针进来。
+// */
+//QPointF GraphicImageView::posToOrigin(const QPoint &pos) {
+//
+//  auto xScroll = this->horizontalScrollBar()->value();
+//  auto yScroll = this->verticalScrollBar()->value();
+//
+//  // we need the pos on scene
+//  auto tmpX = xScroll + pos.x();
+//  auto tmpY = yScroll + pos.y();
+//
+//  qDebug() << "x: " << tmpX / this->_scale << ", y: " << tmpY / this->_scale;
+//  qDebug() << "mapToScene: " << mapToScene(pos);
+//
+//  return {tmpX / this->_scale, tmpY / this->_scale};
+//}
 
 /**
  * selectRect is rect on scene
