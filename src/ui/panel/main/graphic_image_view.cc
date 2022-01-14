@@ -14,8 +14,10 @@
 // click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=751,289, screenPos=1323,537)
 // click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=754,292, screenPos=1326,540)
 // ok the loc pos is the GraphicImageView's current loc.
+// https://stackoverflow.com/questions/14610568/how-to-use-the-qgraphicsviews-translate-function
 GraphicImageView::GraphicImageView(QWidget *parent)
 : QGraphicsView(parent), _scale(1.0) {
+//  this->setTransformationAnchor(QGraphicsView::NoAnchor);
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -44,6 +46,7 @@ void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
   QGraphicsView::mouseDoubleClickEvent(event);
 }
 
+// so what's the event pos?
 void GraphicImageView::mousePressEvent(QMouseEvent *event) {
   QGraphicsView::mousePressEvent(event);
 //  qDebug() << "click at: " << event;
@@ -51,7 +54,7 @@ void GraphicImageView::mousePressEvent(QMouseEvent *event) {
 
   _selectRect->setRect((int)std::floor(this->_selectStartPos.x()),
                        (int)std::floor(this->_selectStartPos.y()), 0, 0);
-  _selectRect->setRect(0, 0, 100, 100);
+//  _selectRect->setRect(0, 0, 100, 100);
   _selectItem->setRect(*this->_selectRect);
 //  qDebug() << "down rect: " << *_selectRect;
 }
@@ -88,6 +91,9 @@ QPointF GraphicImageView::posToOrigin(const QPoint &pos) {
   return {tmpX / this->_scale, tmpY / this->_scale};
 }
 
+/**
+ * selectRect is rect on scene
+ */
 void GraphicImageView::updateImageBySelect(QRectF selectRect) {
 // scale 之后的size是多少？
   auto dstSize = this->size();
@@ -101,11 +107,17 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
 
   qDebug() << "_scale: " << this->_scale;
 
-  this->translate(selectRect.x(), selectRect.y());
+  auto transX = selectRect.x() * this->_scale;
+  auto transY = selectRect.y() * this->_scale;
+  qDebug() << "transX: " << transX << ", transY: " << transY;
+  // trans 好像是没有作用啊
+//  this->translate(transX, transY);
   // why scale cause initial (0, 0) change?
   // 主要是注意这里可以连续scale的。
   // why not work?
   // 为什么又不起作用了？
+  this->horizontalScrollBar()->setValue((int)transX);
+  this->verticalScrollBar()->setValue((int)transY);
   this->scale(_scale, _scale);
 }
 
