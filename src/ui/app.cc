@@ -3,13 +3,24 @@
 //
 
 #include "app.h"
-#include "../module/size_config.h"
 #include "../manager/capture/capture_window_manager.h"
 #include <QtWidgets>
 #include <pic_tool/settings/setting.h>
+#include <vector>
+#include <boost/filesystem.hpp>
 
 App* App::_inst = nullptr;
 QtAwesome *App::awesome = nullptr;
+
+static std::string getDefaultImgPath() {
+    std::vector<std::string> pathes{"C:/Users/huhua/Pictures/bb.bmp", "C:/Users/hwf/Pictures/bbb.jpeg"};
+    for (auto path: pathes) {
+        if (boost::filesystem::exists(path)) {
+            return path;
+        }
+    }
+    return "";
+}
 
 App::App(): panelMain(new MainPanel) {
     settingInit(this);
@@ -22,12 +33,8 @@ App::App(): panelMain(new MainPanel) {
     this->createDockers();
     this->createMenu();
 
-    auto path = "C:/Users/huhua/Pictures/bb.bmp";
-//    path = "C:/Users/hwf/Pictures/bb.bmp";
-// 1920 x 1920
-    path = "C:/Users/hwf/Pictures/bbb.jpeg";
-//    if (!boost::file)
-    // can I check the path exist.
+    auto path = getDefaultImgPath();
+
     this->loadImage(path);
 
     this->panelMain->addImgAlter([this](cv::InputArray src, cv::OutputArray dst) {
