@@ -25,7 +25,7 @@ static int CROP_THRESHOLD = 10;
  * @param parent
  */
 GraphicImageView::GraphicImageView(QWidget *parent)
-: QGraphicsView(parent), _scale(1.0), mode(OpMode::POI) {
+: QGraphicsView(parent), _scale(1.0), mode(OpMode::POI), _isSelecting(false) {
   setMouseTracking(true);
 //  this->setTransformationAnchor(QGraphicsView::NoAnchor);
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -72,7 +72,6 @@ void GraphicImageView::mousePressEvent(QMouseEvent *event) {
 }
 
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
-//  qDebug() << "mouseMoveEvent: " << event;
   QGraphicsView::mouseMoveEvent(event);
   emit onMove(this->mapToScene(event->pos()).toPoint(), cv::Scalar_<uint8_t>(255, 0, 0));
 
@@ -80,7 +79,6 @@ void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
     return;
   }
   this->_selectStopPos = this->mapToScene(event->pos());
-//  qDebug() << "move rect: " << *_selectRect;
   _selectRect->setRight((int)std::ceil(this->_selectStopPos.x()));
   _selectRect->setBottom((int)std::ceil(this->_selectStopPos.y()));
   _selectItem->setRect(*this->_selectRect);
