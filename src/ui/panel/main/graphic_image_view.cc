@@ -30,7 +30,6 @@ static int CROP_THRESHOLD = 10;
 GraphicImageView::GraphicImageView(QWidget *parent)
 : QGraphicsView(parent), _scale(1.0), mode(OpMode::ROI), _isSelecting(false) {
   setMouseTracking(true);
-//  this->setTransformationAnchor(QGraphicsView::NoAnchor);
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -85,7 +84,7 @@ void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
   auto pos = this->mapToScene(event->pos()).toPoint();
   cv::Scalar_<uint8_t> color{0, 0, 0};
   if (QPointInMat(this->_img, pos)) {
-    color = this->_img.at<uint8_t>(pos.x(), pos.y());
+    color = this->_img.at<cv::Scalar_<uint8_t>>(pos.x(), pos.y());
   }
   emit onMove(pos, color);
 
@@ -110,7 +109,6 @@ void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
   }
 }
 
-// ok, let me fix you
 /**
  * @param selectRect size in scene.
  */
@@ -121,30 +119,19 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
 // scale 之后的size是多少？
   auto dstSize = this->size();
   qDebug() << " dst size: " << dstSize << ", selectSize: " << selectRect;
-//  qDebug() << "graphicScene size: " << this->item
   auto scale = std::min(
       dstSize.width()  / selectRect.width(),
       dstSize.height() / selectRect.height());
   qDebug() << "scale: " << scale;
-//  this->_scale = scale;
   this->_scale = scale / this->_scale;
-
-  qDebug() << "_scale: " << this->_scale;
-
-  auto transX = selectRect.x() * this->_scale;
-  auto transY = selectRect.y() * this->_scale;
-
-//  transX = selectRect.x();
-//  transY = selectRect.y();
-  qDebug() << "transX: " << transX << ", transY: " << transY;
 
   // trans是起作用的，只是好像值不对啊。
   // 这个是scale之前还是之后的？
   this->scale(_scale, _scale);
 
   auto tryTrans = this->mapFromScene(selectRect.topLeft());
-  transX = tryTrans.x();
-  transY = tryTrans.y();
+  auto transX = tryTrans.x();
+  auto transY = tryTrans.y();
   this->horizontalScrollBar()->setValue((int)transX);
   this->verticalScrollBar()->setValue((int)transY);
 }

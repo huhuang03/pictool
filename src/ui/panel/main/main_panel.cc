@@ -13,54 +13,55 @@
 
 // how to present the global thing?
 // recycle import is ok??
-MainPanel::MainPanel(QWidget *parent): QWidget(parent)
+MainPanel::MainPanel(QWidget *parent) : QWidget(parent)
 //, centerImage(new CenterImageView()) {
-, centerImage(new GraphicImageView()) {
-    centerImage->setFixedSize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
+    , centerImage(new GraphicImageView()) {
+  centerImage->setFixedSize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
 
-    auto rootLayout = new QVBoxLayout();
-    this->setLayout(rootLayout);
+  auto rootLayout = new QVBoxLayout();
+  this->setLayout(rootLayout);
 
-    rootLayout->addWidget(centerImage);
-    this->initToolLayout(rootLayout);
+  rootLayout->addWidget(centerImage);
+  this->initToolLayout(rootLayout);
 
   connect(centerImage, &GraphicImageView::onMove, this,
           &MainPanel::onImgMonthMove);
 }
 
 void MainPanel::loadImage(cv::Mat img) {
-    this->originImg = std::move(img);
-    this->updateImg();
+  this->originImg = std::move(img);
+  this->updateImg();
 }
 
 void MainPanel::addImgAlter(ImgAlerter alerter) {
-    this->alters.push_back(alerter);
+  this->alters.push_back(alerter);
 }
 
 void MainPanel::updateImg() {
-    if (this->originImg.empty()) {
-        return;
-    }
+  if (this->originImg.empty()) {
+    return;
+  }
 
-    cv::Mat curImg = this->originImg;
-    for (const auto &alter: this->alters) {
-        cv::Mat outImg;
-        alter(curImg, outImg);
-        curImg = outImg;
-    }
+  cv::Mat curImg = this->originImg;
+  for (const auto &alter : this->alters) {
+    cv::Mat outImg;
+    alter(curImg, outImg);
+    curImg = outImg;
+  }
 
-    this->centerImage->setImage(curImg);
+  // hwo can I print the image data type?
+  this->centerImage->setImage(curImg);
 }
 
 void MainPanel::initToolLayout(QLayout *parentLayout) {
-    auto container = new QWidget();
-    auto layoutTools = new QHBoxLayout(container);
-    if (App::awesome == nullptr) {
-        App::awesome = new QtAwesome(this);
-        App::awesome->initFontAwesome();
-    }
+  auto container = new QWidget();
+  auto layoutTools = new QHBoxLayout(container);
+  if (App::awesome == nullptr) {
+    App::awesome = new QtAwesome(this);
+    App::awesome->initFontAwesome();
+  }
 
-    // how to set the
+  // how to set the
   auto btCrop1 = new QToolButton();
   btCrop1->setIcon(App::awesome->icon(fa::search));
   btCrop1->setCheckable(true);
@@ -82,13 +83,14 @@ void MainPanel::initToolLayout(QLayout *parentLayout) {
 }
 
 void MainPanel::onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color) {
+  std::cout << "color: " << color << std::endl;
 //  qDebug() << "onImgMonthMove: " << pos << color[0];
   lbStatus->setText(
       QString("[%1,%2](%3,%4,%5)")
-      .arg(pos.x())
-      .arg(pos.y())
-      .arg(color[0])
-      .arg(color[0])
-      .arg(color[0])
+          .arg(pos.x())
+          .arg(pos.y())
+          .arg(color[0])
+          .arg(color[1])
+          .arg(color[2])
   );
 }
