@@ -1,5 +1,10 @@
 * TODOS
-- 增加移动时候的emit事件(坐标，bgr)
+** 增加移动时候的emit事件(坐标，bgr)
+what's the better idea to get the color(ok, let's use bgr, fuck opencv)?
+
+** And any better idea to handle the very small image.
+
+
 
 ** persistant the opened image path. with search.
 
@@ -10,5 +15,6 @@
 * Error
 
 * Links
-- https://doc.qt.io/qt-5/qtwidgets-mainwindows-application-example.html
-- https://github.com/greenshot/greenshot
+- [[https://doc.qt.io/qt-5/qtwidgets-mainwindows-application-example.html][qt main application demo]]
+- [[https://github.com/greenshot/greenshot][greenshot a screen cap tool]]
+- [[http://qtandopencv.blogspot.com/2013/08/how-to-convert-between-cvmat-and-qimage.html][cv mat with QImage]]

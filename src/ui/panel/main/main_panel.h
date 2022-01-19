@@ -10,6 +10,7 @@
 #include <QLabel>
 #include <QLabel>
 #include <functional>
+#include <QToolButton>
 #include "center_image_view.h"
 #include "./graphic_image_view.h"
 
@@ -37,6 +38,8 @@ private:
   QLabel *lbStatus;
   cv::Mat originImg;
   QImage *qImg;
+  QToolButton *btPre;
+  QToolButton *btNext;
   GraphicImageView *centerImage;
   std::vector<ImgAlerter> alters;
 

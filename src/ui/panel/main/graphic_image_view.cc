@@ -9,6 +9,9 @@
 #include <QMouseEvent>
 #include <QScrollBar>
 #include <QRect>
+#include <QImage>
+//this is boring, any better idea?
+#include "../../../util/util_cv.h"
 
 static int CROP_THRESHOLD = 10;
 
@@ -25,7 +28,7 @@ static int CROP_THRESHOLD = 10;
  * @param parent
  */
 GraphicImageView::GraphicImageView(QWidget *parent)
-: QGraphicsView(parent), _scale(1.0), mode(OpMode::POI), _isSelecting(false) {
+: QGraphicsView(parent), _scale(1.0), mode(OpMode::ROI), _isSelecting(false) {
   setMouseTracking(true);
 //  this->setTransformationAnchor(QGraphicsView::NoAnchor);
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
@@ -39,12 +42,19 @@ GraphicImageView::GraphicImageView(QWidget *parent)
   this->item = new QGraphicsPixmapItem();
   group->addToGroup(this->item);
 
-  this->_selectItem = new QGraphicsRectItem();
+  this->_roiItem = new QGraphicsRectItem();
   this->_selectRect = new QRect(0, 0, 0, 0);
-  this->_selectItem->setRect(*this->_selectRect);
-  group->addToGroup(this->_selectItem);
+  this->_roiItem->hide();
+  this->_roiItem->setRect(*this->_selectRect);
+  group->addToGroup(this->_roiItem);
 
   graphicScene->addItem(group);
+}
+
+
+void GraphicImageView::setQImage(const QImage &img) {
+  QImage2Mat(img, this->_img);
+  this->setPixmap(QPixmap::fromImage(img));
 }
 
 void GraphicImageView::setPixmap(const QPixmap &pixmap) {
@@ -59,64 +69,50 @@ void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
 // so what's the event pos?
 void GraphicImageView::mousePressEvent(QMouseEvent *event) {
   QGraphicsView::mousePressEvent(event);
-  if (mode == OpMode::POI) {
-    this->_isSelecting = true;
-  } else {
-    return;
-  }
-  this->_selectStartPos = this->mapToScene(event->pos());
+  if (mode == OpMode::ROI) {
+    this->_roiItem->show();
+    this->_selectStartPos = this->mapToScene(event->pos());
 
-  _selectRect->setRect((int)std::floor(this->_selectStartPos.x()),
-                       (int)std::floor(this->_selectStartPos.y()), 0, 0);
-  _selectItem->setRect(*this->_selectRect);
+    _selectRect->setRect((int)std::floor(this->_selectStartPos.x()),
+                         (int)std::floor(this->_selectStartPos.y()), 0, 0);
+    _roiItem->setRect(*this->_selectRect);
+  }
+
 }
 
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
   QGraphicsView::mouseMoveEvent(event);
-  emit onMove(this->mapToScene(event->pos()).toPoint(), cv::Scalar_<uint8_t>(255, 0, 0));
-
-  if (!isSelecting()) {
-    return;
+  auto pos = this->mapToScene(event->pos()).toPoint();
+  cv::Scalar_<uint8_t> color{0, 0, 0};
+  if (QPointInMat(this->_img, pos)) {
+    color = this->_img.at<uint8_t>(pos.x(), pos.y());
   }
-  this->_selectStopPos = this->mapToScene(event->pos());
-  _selectRect->setRight((int)std::ceil(this->_selectStopPos.x()));
-  _selectRect->setBottom((int)std::ceil(this->_selectStopPos.y()));
-  _selectItem->setRect(*this->_selectRect);
+  emit onMove(pos, color);
+
+  if (this->mode == OpMode::ROI) {
+    this->_selectStopPos = this->mapToScene(event->pos());
+    _selectRect->setRight((int)std::ceil(this->_selectStopPos.x()));
+    _selectRect->setBottom((int)std::ceil(this->_selectStopPos.y()));
+    _roiItem->setRect(*this->_selectRect);
+  }
 }
 
 void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
   QGraphicsView::mouseReleaseEvent(event);
 
-  if (!isSelecting()) {
-    return;
+  this->_roiItem->hide();
+  if (this->mode == OpMode::ROI) {
+    this->_isSelecting = false;
+    QRectF rect(*this->_selectRect);
+    this->updateImageBySelect(rect);
+    _selectRect->setRect(0, 0, 0, 0);
+    _roiItem->setRect(*this->_selectRect);
   }
-  this->_isSelecting = false;
-  QRectF rect(*this->_selectRect);
-  this->updateImageBySelect(rect);
-  _selectRect->setRect(0, 0, 0, 0);
-  _selectItem->setRect(*this->_selectRect);
 }
 
-///**
-// * 虽然返回一个对象，实际是由传入函数传递指针进来。
-// */
-//QPointF GraphicImageView::posToOrigin(const QPoint &pos) {
-//
-//  auto xScroll = this->horizontalScrollBar()->value();
-//  auto yScroll = this->verticalScrollBar()->value();
-//
-//  // we need the pos on scene
-//  auto tmpX = xScroll + pos.x();
-//  auto tmpY = yScroll + pos.y();
-//
-//  qDebug() << "x: " << tmpX / this->_scale << ", y: " << tmpY / this->_scale;
-//  qDebug() << "mapToScene: " << mapToScene(pos);
-//
-//  return {tmpX / this->_scale, tmpY / this->_scale};
-//}
-
+// ok, let me fix you
 /**
- * selectRect is rect on scene
+ * @param selectRect size in scene.
  */
 void GraphicImageView::updateImageBySelect(QRectF selectRect) {
   if (selectRect.width() < CROP_THRESHOLD || selectRect.height() < CROP_THRESHOLD) {
@@ -129,23 +125,28 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
   auto scale = std::min(
       dstSize.width()  / selectRect.width(),
       dstSize.height() / selectRect.height());
-  this->_scale = scale;
-//  this->_scale = scale / this->_scale;
+  qDebug() << "scale: " << scale;
+//  this->_scale = scale;
+  this->_scale = scale / this->_scale;
 
   qDebug() << "_scale: " << this->_scale;
 
   auto transX = selectRect.x() * this->_scale;
   auto transY = selectRect.y() * this->_scale;
+
+//  transX = selectRect.x();
+//  transY = selectRect.y();
   qDebug() << "transX: " << transX << ", transY: " << transY;
-  // trans 好像是没有作用啊
-//  this->translate(transX, transY);
-  // why scale cause initial (0, 0) change?
-  // 主要是注意这里可以连续scale的。
-  // why not work?
-  // 为什么又不起作用了？
+
+  // trans是起作用的，只是好像值不对啊。
+  // 这个是scale之前还是之后的？
+  this->scale(_scale, _scale);
+
+  auto tryTrans = this->mapFromScene(selectRect.topLeft());
+  transX = tryTrans.x();
+  transY = tryTrans.y();
   this->horizontalScrollBar()->setValue((int)transX);
   this->verticalScrollBar()->setValue((int)transY);
-  this->scale(_scale, _scale);
 }
 
 void GraphicImageView::forward() {
@@ -157,5 +158,10 @@ void GraphicImageView::forward() {
 
 void GraphicImageView::backward() {
 
+}
+
+void GraphicImageView::setImage(const cv::Mat &mat) {
+    this->_img = mat;
+    this->setQImage(QImage((unsigned char *) mat.data, mat.cols, mat.rows, QImage::Format_BGR888));
 }
 

@@ -49,7 +49,7 @@ void MainPanel::updateImg() {
         curImg = outImg;
     }
 
-    this->centerImage->setPixmap(QPixmap::fromImage(QImage((unsigned char*) curImg.data, curImg.cols, curImg.rows, QImage::Format_BGR888)));
+    this->centerImage->setImage(curImg);
 }
 
 void MainPanel::initToolLayout(QLayout *parentLayout) {
@@ -61,16 +61,24 @@ void MainPanel::initToolLayout(QLayout *parentLayout) {
     }
 
     // how to set the
-    auto btCrop1 = new QToolButton();
-    btCrop1->setIcon(App::awesome->icon(fa::search));
-    btCrop1->setCheckable(true);
+  auto btCrop1 = new QToolButton();
+  btCrop1->setIcon(App::awesome->icon(fa::search));
+  btCrop1->setCheckable(true);
+  layoutTools->addWidget(btCrop1);
 
-    this->lbStatus = new QLabel();
+  auto btPre = new QToolButton();
+  btPre->setIcon(App::awesome->icon(fa::arrowleft));
+  layoutTools->addWidget(btPre);
 
-    layoutTools->addWidget(btCrop1);
-    layoutTools->addWidget(this->lbStatus);
+  auto btNext = new QToolButton();
+  btNext->setIcon(App::awesome->icon(fa::arrowright));
+  layoutTools->addWidget(btNext);
 
-    parentLayout->addWidget(container);
+  this->lbStatus = new QLabel();
+
+  layoutTools->addWidget(this->lbStatus);
+
+  parentLayout->addWidget(container);
 }
 
 void MainPanel::onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color) {

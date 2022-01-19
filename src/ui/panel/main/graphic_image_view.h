@@ -22,8 +22,10 @@ class GraphicImageView: public QGraphicsView {
   Q_OBJECT;
   signals:
   void onMove(QPoint pos, cv::Scalar_<uint8_t> color);
+  void onHistoryChange();
 
  private:
+  cv::Mat _img;
   std::stack<QRectF> _selects;
   std::stack<QRectF> _selectPops;
 
@@ -31,25 +33,26 @@ class GraphicImageView: public QGraphicsView {
   void updateImageBySelect(QRectF selectRect);
   double _scale;
   QRect *_selectRect;
-  QGraphicsRectItem *_selectItem;
+  QGraphicsRectItem *_roiItem;
   // not useful, actually.
   QPointF _selectStartPos;
   QPointF _selectStopPos;
   OpMode mode;
+
   /**
    * 是否在选择中
    */
   bool _isSelecting;
 
-//  /**
-//   * 点击事件的位置，变化为GraphicScene上的坐标
-//   * @return
-//   */
-//  QPointF posToOrigin(const QPoint& pos);
-
   inline bool isSelecting() {
     return _isSelecting;
   };
+
+  /**
+   * deprecated don't use this any more
+   * @param pixmap
+   */
+  void setPixmap(const QPixmap &pixmap);
 
 
  protected:
@@ -60,7 +63,10 @@ class GraphicImageView: public QGraphicsView {
 
  public:
   explicit GraphicImageView(QWidget *parent = nullptr);
-  void setPixmap(const QPixmap &pixmap);
+
+  void setQImage(const QImage &img);
+  void setImage(const cv::Mat &mat);
+
   inline void setMode(OpMode _mode) {
     this->mode = _mode;
   }
