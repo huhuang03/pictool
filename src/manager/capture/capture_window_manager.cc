@@ -5,7 +5,7 @@
 #include "capture_window_manager.h"
 #include <Windows.h>
 #include <iostream>
-#include "../../comm/util/util_eq.h"
+#include "pictool/internal/util/util_eq.h"
 #include "pictool/internal/util.h"
 
 const int CAPTURE_THRESHOLD = 1 * 1000;

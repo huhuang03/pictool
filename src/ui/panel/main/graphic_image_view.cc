@@ -6,7 +6,7 @@
 #include <qdebug.h>
 #include <QMouseEvent>
 #include <QScrollBar>
-#include "../../../comm/util/util_cv.h"
+#include "pictool/internal/util/util_cv.h"
 #include <pictool/internal/util.h>
 
 static int CROP_THRESHOLD = 10;

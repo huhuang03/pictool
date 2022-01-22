@@ -6,6 +6,8 @@
 #define PIC_TOOL_UTIL_H
 #include <stack>
 #include <QRectF>
+#include "./util/util_cv.h"
+#include "./util/util_eq.h"
 
 namespace pt {
   unsigned long ms();
