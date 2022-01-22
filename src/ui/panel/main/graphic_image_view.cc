@@ -113,22 +113,9 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
 
 
   auto scale = min(widthScale, heightScale);
-//  QTransform trans = QTransform().translate(-selectRect.x(), -selectRect.y())
-//      * QTransform().scale(scale, scale);
-//
-//  qDebug() << "trans after scale: " << trans;
-//  this->setTransform(trans);
-//  qDebug() << "scale: " << scale;
-
-// 好像我也不能resize吧
-  this->_scale = scale / this->_scale;
-  this->scale(_scale, _scale);
-//
-  auto tryTrans = this->mapFromScene(selectRect.topLeft());
-  auto transX = tryTrans.x();
-  auto transY = tryTrans.y();
-  this->horizontalScrollBar()->setValue((int)transX);
-  this->verticalScrollBar()->setValue((int)transY);
+  QTransform trans = QTransform().translate(-selectRect.x(), -selectRect.y())
+      * QTransform().scale(scale, scale);
+  this->setTransform(trans);
 }
 
 void GraphicImageView::forward() {
