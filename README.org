@@ -1,7 +1,5 @@
 * TODOS
-** 增加移动时候的emit事件(坐标，bgr)
-what's the better idea to get the color(ok, let's use bgr, fuck opencv)?
-
+** add history ability
 ** And any better idea to handle the very small image.
 
 

@@ -2,7 +2,7 @@
 // Created by huhua on 2021/8/20.
 //
 
-#include "../../include/pt/util.h"
+#include <pictool/internal/util.h>
 #include <Windows.h>
 
 namespace pt {
@@ -13,9 +13,9 @@ unsigned long ms() {
   return time_ms;
 }
 
-template<class T>
-void clear(std::stack<T> &s) {
-  std::stack<T> empty;
-  s.swap(empty);
-}
+//template<class T>
+//void clear(std::stack<T> &s) {
+//  std::stack<T> empty;
+//  s.swap(empty);
+//}
 }

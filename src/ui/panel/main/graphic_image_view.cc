@@ -7,8 +7,7 @@
 #include <QMouseEvent>
 #include <QScrollBar>
 #include "../../../comm/util/util_cv.h"
-// why you not work? so strange.
-#include <pt/util.h>
+#include <pictool/internal/util.h>
 
 static int CROP_THRESHOLD = 10;
 

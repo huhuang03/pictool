@@ -13,8 +13,6 @@ find_package(Boost REQUIRED COMPONENTS filesystem)
 target_link_libraries(pictool_lib Qt5::Widgets easybot QtAwesome Boost::filesystem)
 target_include_directories(pictool_lib PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/../include")
 message('CMAKE_CURRENT_SOURCE_DIR: ${CMAKE_CURRENT_SOURCE_DIR}/include')
-# not work?
-target_include_directories(pictool_lib INTERFACE "${CMAKE_CURRENT_SOURCE_DIR}/include")
 
 add_executable(pictool ${SRC_LIB} main.cc)
 
