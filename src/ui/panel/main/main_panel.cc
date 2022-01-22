@@ -5,7 +5,6 @@
 #include "main_panel.h"
 #include <QLayout>
 #include <utility>
-#include <QScrollArea>
 #include "../../../module/size_config.h"
 #include <pictool/global.h>
 #include "../../app.h"

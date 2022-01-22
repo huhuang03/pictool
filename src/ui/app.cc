@@ -13,7 +13,7 @@ App* App::_inst = nullptr;
 QtAwesome *App::awesome = nullptr;
 
 static std::string getDefaultImgPath() {
-    std::vector<std::string> pathes{"C:/Users/huhua/Pictures/bb.bmp", "C:/Users/hwf/Pictures/bbb.jpeg"};
+    std::vector<std::string> pathes{"C:/Users/huhua/Pictures/11.bmp", "C:/Users/hwf/Pictures/111.png"};
     for (auto path: pathes) {
         if (boost::filesystem::exists(path)) {
             return path;
@@ -25,8 +25,6 @@ static std::string getDefaultImgPath() {
 App::App(): panelMain(new MainPanel) {
     settingInit(this);
     App::_inst = this;
-//    resize(SIZE_IMG_AREA_W, SIZE_IMG_AREA_H);
-
     setCentralWidget(this->panelMain);
 
     this->createActions();
@@ -101,6 +99,8 @@ void App::open() {
 
 void App::loadImage(const std::string &path) {
     auto img = cv::imread(path);
+    // I want remove alpha
+    std::cout << "channels: " << img.channels();
     if (img.empty()) {
         qDebug() << "why img is empty";
         return;

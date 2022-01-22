@@ -8,6 +8,7 @@
 #include <QScrollBar>
 #include "pictool/internal/util/util_cv.h"
 #include <pictool/internal/util.h>
+#include <cmath>
 
 static int CROP_THRESHOLD = 10;
 
@@ -103,17 +104,14 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
   if (selectRect.width() < CROP_THRESHOLD || selectRect.height() < CROP_THRESHOLD) {
     return;
   }
-// scale 之后的size是多少？
   auto dstSize = this->size();
   qDebug() << " dst size: " << dstSize << ", selectSize: " << selectRect;
-  auto scale = std::min(
-      dstSize.width()  / selectRect.width(),
-      dstSize.height() / selectRect.height());
+  auto widthScale = dstSize.width()  / selectRect.width();
+  auto heightScale = dstSize.height() / selectRect.height();
+  auto scale = min(widthScale, heightScale);
   qDebug() << "scale: " << scale;
   this->_scale = scale / this->_scale;
 
-  // trans是起作用的，只是好像值不对啊。
-  // 这个是scale之前还是之后的？
   this->scale(_scale, _scale);
 
   auto tryTrans = this->mapFromScene(selectRect.topLeft());
