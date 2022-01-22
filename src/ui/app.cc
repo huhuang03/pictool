@@ -102,7 +102,6 @@ void App::loadImage(const std::string &path) {
   // did you real convert it?
   auto img = cv::imread(path);
   // f**k, look's like that still has the alpha channel
-  cv::imshow("hahah", img);
 
   // I want remove alpha
   if (img.empty()) {

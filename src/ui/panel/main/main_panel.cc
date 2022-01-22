@@ -26,8 +26,11 @@ MainPanel::MainPanel(QWidget *parent) : QWidget(parent)
   connect(centerImage, &GraphicImageView::onMove, this,
           &MainPanel::onImgMonthMove);
   connect(centerImage, &GraphicImageView::onHistoryChange, this, &MainPanel::updateHistoryUI);
-  this->updateHistoryUI();
-}
+
+  connect(this->btNext, &QToolButton::clicked, centerImage, &GraphicImageView::forward);
+  connect(this->btPre, &QToolButton::clicked, centerImage, &GraphicImageView::backward);
+
+  this->updateHistoryUI(); }
 
 void MainPanel::loadImage(cv::Mat img) {
   this->originImg = std::move(img);

@@ -26,8 +26,8 @@ class GraphicImageView: public QGraphicsView {
 
  private:
   cv::Mat _img;
-  std::stack<QRectF> _backwards;
-  std::stack<QRectF> _forwards;
+  std::stack<QRectF> _bckStack;
+  std::stack<QRectF> _curStack;
 
   QGraphicsPixmapItem *item;
   void updateImageBySelect(QRectF selectRect);
@@ -74,11 +74,11 @@ class GraphicImageView: public QGraphicsView {
   }
 
   inline bool canForward() {
-    return !_forwards.empty();
+    return !_bckStack.empty();
   }
 
   inline bool canBackward() {
-    return !_backwards.empty();
+    return !_curStack.empty();
   }
 
   void move(const std::stack<QRectF> &from, std::stack<QRectF> &to);

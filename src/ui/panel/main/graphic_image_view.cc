@@ -9,6 +9,7 @@
 #include "pictool/internal/util/util_cv.h"
 #include <pictool/internal/util.h>
 #include <cmath>
+#include <QTransform>
 
 static int CROP_THRESHOLD = 10;
 
@@ -19,6 +20,7 @@ static int CROP_THRESHOLD = 10;
 GraphicImageView::GraphicImageView(QWidget *parent)
 : QGraphicsView(parent), _scale(1.0), mode(OpMode::ROI), _isSelecting(false) {
   setMouseTracking(true);
+  setTransformationAnchor(QGraphicsView::NoAnchor);
   this->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   this->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
   setAlignment(Qt::AlignLeft | Qt::AlignTop);
@@ -47,7 +49,7 @@ void GraphicImageView::setQImage(const QImage &img) {
 
 void GraphicImageView::setPixmap(const QPixmap &pixmap) {
   this->item->setPixmap(pixmap);
-  pt::clear(this->_forwards);
+  pt::clear(this->_curStack);
   this->handleHistoryChanged();
 }
 
@@ -74,7 +76,7 @@ void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
   auto pos = this->mapToScene(event->pos()).toPoint();
   cv::Scalar_<uint8_t> color{0, 0, 0};
   if (QPointInMat(this->_img, pos)) {
-    color = this->_img.at<cv::Scalar_<uint8_t>>(pos.x(), pos.y());
+    color = this->_img.at<cv::Scalar_<uint8_t>>(pos.y(), pos.x());
   }
   emit onMove(pos, color);
 
@@ -92,7 +94,7 @@ void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
   this->_roiItem->hide();
   if (this->mode == OpMode::ROI) {
     this->_isSelecting = false;
-    this->_forwards.push(*this->_selectRect);
+    this->_curStack.push(*this->_selectRect);
     this->handleHistoryChanged();
   }
 }
@@ -108,12 +110,20 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
   qDebug() << " dst size: " << dstSize << ", selectSize: " << selectRect;
   auto widthScale = dstSize.width()  / selectRect.width();
   auto heightScale = dstSize.height() / selectRect.height();
+
+
   auto scale = min(widthScale, heightScale);
-  qDebug() << "scale: " << scale;
+//  QTransform trans = QTransform().translate(-selectRect.x(), -selectRect.y())
+//      * QTransform().scale(scale, scale);
+//
+//  qDebug() << "trans after scale: " << trans;
+//  this->setTransform(trans);
+//  qDebug() << "scale: " << scale;
+
+// 好像我也不能resize吧
   this->_scale = scale / this->_scale;
-
   this->scale(_scale, _scale);
-
+//
   auto tryTrans = this->mapFromScene(selectRect.topLeft());
   auto transX = tryTrans.x();
   auto transY = tryTrans.y();
@@ -122,11 +132,11 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
 }
 
 void GraphicImageView::forward() {
-  this->move(this->_backwards, this->_forwards);
+  this->move(this->_bckStack, this->_curStack);
 }
 
 void GraphicImageView::backward() {
-  this->move(this->_forwards, this->_backwards);
+  this->move(this->_curStack, this->_bckStack);
 }
 
 void GraphicImageView::setImage(const cv::Mat &mat) {
@@ -146,11 +156,11 @@ void GraphicImageView::move(const std::stack<QRectF> &from, std::stack<QRectF> &
 
 void GraphicImageView::handleHistoryChanged() {
   emit onHistoryChange();
-  if (this->_forwards.empty()) {
+  if (this->_curStack.empty()) {
     auto size = this->_img.size();
     this->updateImageBySelect(QRectF(QPointF(0, 0), QSize(size.width, size.height)));
   } else {
-    auto rect = this->_forwards.top();
+    auto rect = this->_curStack.top();
     this->updateImageBySelect(rect);
   }
 }
