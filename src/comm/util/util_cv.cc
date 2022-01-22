@@ -29,5 +29,5 @@ void QImage2Mat(const QImage &src, const cv::_OutputArray &out) {
 
 bool QPointInMat(const cv::Mat &img, QPoint point) {
   return (point.x() >= 0 && point.x() < img.cols) &&
-    (point.x() >= 0 && point.x() < img.rows);
+    (point.y() >= 0 && point.y() < img.rows);
 }

@@ -87,7 +87,7 @@ void MainPanel::initToolLayout(QLayout *parentLayout) {
 }
 
 
-void MainPanel::onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color) {
+void MainPanel::onImgMonthMove(QPoint pos, cv::Vec3b color) {
 //  std::cout << "color: " << color << std::endl;
 //  qDebug() << "onImgMonthMove: " << pos << color[0];
   lbStatus->setText(

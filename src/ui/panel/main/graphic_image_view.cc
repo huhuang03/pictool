@@ -49,7 +49,9 @@ void GraphicImageView::setQImage(const QImage &img) {
 
 void GraphicImageView::setPixmap(const QPixmap &pixmap) {
   this->item->setPixmap(pixmap);
-  pt::clear(this->_curStack);
+  this->_history.clear();
+  this->_history.emplace_back(pixmap.rect());
+  this->index = 0;
   this->handleHistoryChanged();
 }
 
@@ -74,9 +76,9 @@ void GraphicImageView::mousePressEvent(QMouseEvent *event) {
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
   QGraphicsView::mouseMoveEvent(event);
   auto pos = this->mapToScene(event->pos()).toPoint();
-  cv::Scalar_<uint8_t> color{0, 0, 0};
+  cv::Vec3b color{0, 0, 0};
   if (QPointInMat(this->_img, pos)) {
-    color = this->_img.at<cv::Scalar_<uint8_t>>(pos.y(), pos.x());
+    color = this->_img.at<cv::Vec3b>(pos.y(), pos.x());
   }
   emit onMove(pos, color);
 
@@ -92,9 +94,16 @@ void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
   QGraphicsView::mouseReleaseEvent(event);
 
   this->_roiItem->hide();
+
   if (this->mode == OpMode::ROI) {
     this->_isSelecting = false;
-    this->_curStack.push(*this->_selectRect);
+
+    if (this->canForward()) {
+      this->_history.erase(this->_history.begin() + 1, this->_history.end());
+    }
+
+    this->_history.emplace_back(*this->_selectRect);
+    this->index = this->_history.size() - 1;
     this->handleHistoryChanged();
   }
 }
@@ -119,11 +128,17 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
 }
 
 void GraphicImageView::forward() {
-  this->move(this->_bckStack, this->_curStack);
+  if (this->canForward()) {
+    this->index += 1;
+    this->handleHistoryChanged();
+  }
 }
 
 void GraphicImageView::backward() {
-  this->move(this->_curStack, this->_bckStack);
+  if (this->canBackward()) {
+    this->index -= 1;
+    this->handleHistoryChanged();
+  }
 }
 
 void GraphicImageView::setImage(const cv::Mat &mat) {
@@ -134,6 +149,7 @@ void GraphicImageView::setImage(const cv::Mat &mat) {
 void GraphicImageView::move(const std::stack<QRectF> &from, std::stack<QRectF> &to) {
   if (!from.empty()) {
     auto rect = from.top();
+    qDebug() << "pop: " << rect;
     this->updateSceneRect(rect);
     to.push(rect);
     to.pop();
@@ -143,11 +159,15 @@ void GraphicImageView::move(const std::stack<QRectF> &from, std::stack<QRectF> &
 
 void GraphicImageView::handleHistoryChanged() {
   emit onHistoryChange();
-  if (this->_curStack.empty()) {
-    auto size = this->_img.size();
-    this->updateImageBySelect(QRectF(QPointF(0, 0), QSize(size.width, size.height)));
-  } else {
-    auto rect = this->_curStack.top();
+  if (!this->_history.empty()) {
+    auto rect = this->_history[this->index];
     this->updateImageBySelect(rect);
   }
+//  if (this->_curStack.empty()) {
+//    auto size = this->_img.size();
+//    this->updateImageBySelect(QRectF(QPointF(0, 0), QSize(size.width, size.height)));
+//  } else {
+//    auto rect = this->_curStack.top();
+//    this->updateImageBySelect(rect);
+//  }
 }

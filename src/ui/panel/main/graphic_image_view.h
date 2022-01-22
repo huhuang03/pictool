@@ -21,11 +21,13 @@
 class GraphicImageView: public QGraphicsView {
   Q_OBJECT;
   signals:
-  void onMove(QPoint pos, cv::Scalar_<uint8_t> color);
+  void onMove(QPoint pos, cv::Vec3b color);
   void onHistoryChange();
 
  private:
   cv::Mat _img;
+  std::vector<QRectF> _history;
+  int index = -1;
   std::stack<QRectF> _bckStack;
   std::stack<QRectF> _curStack;
 
@@ -74,11 +76,11 @@ class GraphicImageView: public QGraphicsView {
   }
 
   inline bool canForward() {
-    return !_bckStack.empty();
+    return this->index < this->_history.size() - 1;
   }
 
   inline bool canBackward() {
-    return !_curStack.empty();
+    return this->index > 0;
   }
 
   void move(const std::stack<QRectF> &from, std::stack<QRectF> &to);

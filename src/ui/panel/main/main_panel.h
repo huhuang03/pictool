@@ -23,7 +23,7 @@ typedef std::function<void (cv::InputArray in, cv::OutputArray out)> ImgAlerter;
 class MainPanel : public QWidget {
   Q_OBJECT;
 private slots:
-  void onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color);
+  void onImgMonthMove(QPoint pos, cv::Vec3b color);
   void updateHistoryUI();
 
 public:
