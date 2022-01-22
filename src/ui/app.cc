@@ -8,12 +8,13 @@
 #include <pictool/settings/setting.h>
 #include <vector>
 #include <boost/filesystem.hpp>
+#include <opencv2/opencv.hpp>
 
 App* App::_inst = nullptr;
 QtAwesome *App::awesome = nullptr;
 
 static std::string getDefaultImgPath() {
-    std::vector<std::string> pathes{"C:/Users/huhua/Pictures/11.bmp", "C:/Users/hwf/Pictures/111.png"};
+    std::vector<std::string> pathes{"C:/Users/huhua/Pictures/11.bmp", "C:/Users/hwf/Pictures/111.jpg"};
     for (auto path: pathes) {
         if (boost::filesystem::exists(path)) {
             return path;
@@ -98,14 +99,17 @@ void App::open() {
 }
 
 void App::loadImage(const std::string &path) {
-    auto img = cv::imread(path);
-    // I want remove alpha
-    std::cout << "channels: " << img.channels();
-    if (img.empty()) {
-        qDebug() << "why img is empty";
-        return;
-    }
-    panelMain->loadImage(img);
+  // did you real convert it?
+  auto img = cv::imread(path);
+  // f**k, look's like that still has the alpha channel
+  cv::imshow("hahah", img);
+
+  // I want remove alpha
+  if (img.empty()) {
+      qDebug() << "why img is empty";
+      return;
+  }
+  panelMain->loadImage(img);
 }
 
 void App::onHsvRangeChanged(eb::HSVRange hsvRange) {

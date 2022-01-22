@@ -131,7 +131,7 @@ void GraphicImageView::backward() {
 
 void GraphicImageView::setImage(const cv::Mat &mat) {
     this->_img = mat;
-    this->setQImage(QImage((unsigned char *) mat.data, mat.cols, mat.rows, QImage::Format_BGR888));
+    this->setQImage(QImage((unsigned char *) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888));
 }
 
 void GraphicImageView::move(const std::stack<QRectF> &from, std::stack<QRectF> &to) {
