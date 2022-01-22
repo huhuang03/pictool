@@ -5,7 +5,7 @@
 #include "app.h"
 #include "../manager/capture/capture_window_manager.h"
 #include <QtWidgets>
-#include <pic_tool/settings/setting.h>
+#include <pictool/settings/setting.h>
 #include <vector>
 #include <boost/filesystem.hpp>
 

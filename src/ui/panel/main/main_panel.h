@@ -24,6 +24,7 @@ class MainPanel : public QWidget {
   Q_OBJECT;
 private slots:
   void onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color);
+  void updateHistoryUI();
 
 public:
     explicit MainPanel(QWidget *parent = nullptr);

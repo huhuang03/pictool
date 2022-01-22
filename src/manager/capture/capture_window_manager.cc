@@ -5,8 +5,8 @@
 #include "capture_window_manager.h"
 #include <Windows.h>
 #include <iostream>
-#include "../../util/util_eq.h"
-#include "../../util/util.h"
+#include "../../comm/util/util_eq.h"
+#include "../../include/pt/util.h"
 
 const int CAPTURE_THRESHOLD = 1 * 1000;
 
@@ -127,14 +127,14 @@ void CaptureWindowManager::_start() {
         GetCursorPos(&p);
 
 
-        if (eq(preP, p) && (ms() - prePosTime) > CAPTURE_THRESHOLD) {
+        if (eq(preP, p) && (pt::ms() - prePosTime) > CAPTURE_THRESHOLD) {
             doCapture(p);
             break;
         }
 
         if (!eq(preP, p)) {
             preP = p;
-            prePosTime = ms();
+            prePosTime = pt::ms();
         }
 
         Sleep(200);

@@ -3,27 +3,16 @@
 //
 
 #include "graphic_image_view.h"
-#include <QGraphicsScene>
-#include <QGraphicsItem>
 #include <qdebug.h>
 #include <QMouseEvent>
 #include <QScrollBar>
-#include <QRect>
-#include <QImage>
-//this is boring, any better idea?
-#include "../../../util/util_cv.h"
+#include "../../../comm/util/util_cv.h"
+// why you not work? so strange.
+#include <pt/util.h>
 
 static int CROP_THRESHOLD = 10;
 
-// pixmap's size:  QSize(618, 330) , thisSize:  QSize(800, 600)
-// click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=751,289, screenPos=1323,537)
-// click at:  QMouseEvent(MouseButtonPress, LeftButton, localPos=754,292, screenPos=1326,540)
-// ok the loc pos is the GraphicImageView's current loc.
-//
 /**
- * 首先我们
- * monthEvent中的坐标：为什么坐标呢。
- *
  * Links: https://stackoverflow.com/questions/14610568/how-to-use-the-qgraphicsviews-translate-function
  * @param parent
  */
@@ -58,7 +47,8 @@ void GraphicImageView::setQImage(const QImage &img) {
 
 void GraphicImageView::setPixmap(const QPixmap &pixmap) {
   this->item->setPixmap(pixmap);
-  this->updateImageBySelect(QRectF(QPointF(0, 0), pixmap.size()));
+  pt::clear(this->_forwards);
+  this->handleHistoryChanged();
 }
 
 void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
@@ -102,10 +92,8 @@ void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
   this->_roiItem->hide();
   if (this->mode == OpMode::ROI) {
     this->_isSelecting = false;
-    QRectF rect(*this->_selectRect);
-    this->updateImageBySelect(rect);
-    _selectRect->setRect(0, 0, 0, 0);
-    _roiItem->setRect(*this->_selectRect);
+    this->_forwards.push(*this->_selectRect);
+    this->handleHistoryChanged();
   }
 }
 
@@ -137,14 +125,11 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
 }
 
 void GraphicImageView::forward() {
-  auto rect = this->_selectPops.top();
-  this->updateSceneRect(rect);
-  this->_selects.push(rect);
-  this->_selects.pop();
+  this->move(this->_backwards, this->_forwards);
 }
 
 void GraphicImageView::backward() {
-
+  this->move(this->_forwards, this->_backwards);
 }
 
 void GraphicImageView::setImage(const cv::Mat &mat) {
@@ -152,3 +137,23 @@ void GraphicImageView::setImage(const cv::Mat &mat) {
     this->setQImage(QImage((unsigned char *) mat.data, mat.cols, mat.rows, QImage::Format_BGR888));
 }
 
+void GraphicImageView::move(const std::stack<QRectF> &from, std::stack<QRectF> &to) {
+  if (!from.empty()) {
+    auto rect = from.top();
+    this->updateSceneRect(rect);
+    to.push(rect);
+    to.pop();
+    this->handleHistoryChanged();
+  }
+}
+
+void GraphicImageView::handleHistoryChanged() {
+  emit onHistoryChange();
+  if (this->_forwards.empty()) {
+    auto size = this->_img.size();
+    this->updateImageBySelect(QRectF(QPointF(0, 0), QSize(size.width, size.height)));
+  } else {
+    auto rect = this->_forwards.top();
+    this->updateImageBySelect(rect);
+  }
+}

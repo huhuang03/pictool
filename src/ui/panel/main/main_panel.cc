@@ -7,7 +7,7 @@
 #include <utility>
 #include <QScrollArea>
 #include "../../../module/size_config.h"
-#include "pic_tool/global.h"
+#include <pictool/global.h>
 #include "../../app.h"
 #include <QToolButton>
 
@@ -26,6 +26,8 @@ MainPanel::MainPanel(QWidget *parent) : QWidget(parent)
 
   connect(centerImage, &GraphicImageView::onMove, this,
           &MainPanel::onImgMonthMove);
+  connect(centerImage, &GraphicImageView::onHistoryChange, this, &MainPanel::updateHistoryUI);
+  this->updateHistoryUI();
 }
 
 void MainPanel::loadImage(cv::Mat img) {
@@ -67,11 +69,11 @@ void MainPanel::initToolLayout(QLayout *parentLayout) {
   btCrop1->setCheckable(true);
   layoutTools->addWidget(btCrop1);
 
-  auto btPre = new QToolButton();
+  this->btPre = new QToolButton();
   btPre->setIcon(App::awesome->icon(fa::arrowleft));
   layoutTools->addWidget(btPre);
 
-  auto btNext = new QToolButton();
+  this->btNext = new QToolButton();
   btNext->setIcon(App::awesome->icon(fa::arrowright));
   layoutTools->addWidget(btNext);
 
@@ -81,6 +83,7 @@ void MainPanel::initToolLayout(QLayout *parentLayout) {
 
   parentLayout->addWidget(container);
 }
+
 
 void MainPanel::onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color) {
   std::cout << "color: " << color << std::endl;
@@ -93,4 +96,9 @@ void MainPanel::onImgMonthMove(QPoint pos, cv::Scalar_<uint8_t> color) {
           .arg(color[1])
           .arg(color[2])
   );
+}
+
+void MainPanel::updateHistoryUI() {
+  this->btNext->setEnabled(this->centerImage->canForward());
+  this->btPre->setEnabled(this->centerImage->canBackward());
 }

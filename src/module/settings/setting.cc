@@ -3,7 +3,7 @@
 //
 
 
-#include "pic_tool/settings/setting.h"
+#include <pictool/settings/setting.h>
 #include <QSettings>
 
 static QSettings *qSetting;
