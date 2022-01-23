@@ -89,6 +89,7 @@ void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
     this->_selectStopPos = posF;
     _selectRect->setRight(pos.x());
     _selectRect->setBottom(pos.y());
+
     _roiItem->setRect(*this->_selectRect);
   }
 }
@@ -115,17 +116,18 @@ void GraphicImageView::mouseReleaseEvent(QMouseEvent *event) {
  * @param selectRect size in scene.
  */
 void GraphicImageView::updateImageBySelect(QRectF selectRect) {
-  if (selectRect.width() < CROP_THRESHOLD || selectRect.height() < CROP_THRESHOLD) {
+  auto rect = selectRect.normalized();
+  if (rect.width() < CROP_THRESHOLD || rect.height() < CROP_THRESHOLD) {
     return;
   }
   auto dstSize = this->size();
-  qDebug() << " dst size: " << dstSize << ", selectSize: " << selectRect;
-  auto widthScale = dstSize.width()  / selectRect.width();
-  auto heightScale = dstSize.height() / selectRect.height();
+  qDebug() << " dst size: " << dstSize << ", selectSize: " << rect;
+  auto widthScale = dstSize.width()  / rect.width();
+  auto heightScale = dstSize.height() / rect.height();
 
 
   auto scale = min(widthScale, heightScale);
-  QTransform trans = QTransform().translate(-selectRect.x(), -selectRect.y())
+  QTransform trans = QTransform().translate(-rect.x(), -rect.y())
       * QTransform().scale(scale, scale);
   this->setTransform(trans);
 }
