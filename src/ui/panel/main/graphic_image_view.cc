@@ -121,7 +121,7 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
     return;
   }
   auto dstSize = this->size();
-  qDebug() << " dst size: " << dstSize << ", selectSize: " << rect;
+//  qDebug() << " dst size: " << dstSize << ", selectSize: " << rect;
   auto widthScale = dstSize.width()  / rect.width();
   auto heightScale = dstSize.height() / rect.height();
 
