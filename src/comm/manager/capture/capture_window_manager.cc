@@ -2,7 +2,7 @@
 // Created by huhua on 2021/8/20.
 //
 
-#include "capture_window_manager.h"
+#include "pictool/internal/capture_window_manager.h"
 #include <Windows.h>
 #include <iostream>
 #include "pictool/internal/util/util_eq.h"

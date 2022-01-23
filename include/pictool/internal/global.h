@@ -6,8 +6,8 @@
 #define PICTOOL_GLOBAL_H
 
 #include <QtAwesome.h>
+#include <QSettings>
 
-//QtAwesome *gAwesome;
-//int *m;
+QSettings *getSetting();
 
 #endif //PICTOOL_GLOBAL_H

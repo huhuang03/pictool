@@ -6,7 +6,7 @@
 #include <QLayout>
 #include <utility>
 #include "../../../module/size_config.h"
-#include <pictool/global.h>
+#include <pictool/internal/global.h>
 #include "../../app.h"
 #include <QToolButton>
 

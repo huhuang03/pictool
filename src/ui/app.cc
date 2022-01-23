@@ -3,7 +3,7 @@
 //
 
 #include "app.h"
-#include "../manager/capture/capture_window_manager.h"
+#include <pictool/internal/capture_window_manager.h>
 #include <QtWidgets>
 #include <pictool/settings/setting.h>
 #include <vector>

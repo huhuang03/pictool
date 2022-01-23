@@ -75,17 +75,20 @@ void GraphicImageView::mousePressEvent(QMouseEvent *event) {
 
 void GraphicImageView::mouseMoveEvent(QMouseEvent *event) {
   QGraphicsView::mouseMoveEvent(event);
-  auto pos = this->mapToScene(event->pos()).toPoint();
+  auto posF = this->mapToScene(event->pos());
+  auto pos = QPoint((int)posF.x(), (int)posF.y());
+
   cv::Vec3b color{0, 0, 0};
   if (QPointInMat(this->_img, pos)) {
     color = this->_img.at<cv::Vec3b>(pos.y(), pos.x());
   }
+
   emit onMove(pos, color);
 
   if (this->mode == OpMode::ROI) {
-    this->_selectStopPos = this->mapToScene(event->pos());
-    _selectRect->setRight((int)std::ceil(this->_selectStopPos.x()));
-    _selectRect->setBottom((int)std::ceil(this->_selectStopPos.y()));
+    this->_selectStopPos = posF;
+    _selectRect->setRight(pos.x());
+    _selectRect->setBottom(pos.y());
     _roiItem->setRect(*this->_selectRect);
   }
 }
@@ -163,11 +166,4 @@ void GraphicImageView::handleHistoryChanged() {
     auto rect = this->_history[this->index];
     this->updateImageBySelect(rect);
   }
-//  if (this->_curStack.empty()) {
-//    auto size = this->_img.size();
-//    this->updateImageBySelect(QRectF(QPointF(0, 0), QSize(size.width, size.height)));
-//  } else {
-//    auto rect = this->_curStack.top();
-//    this->updateImageBySelect(rect);
-//  }
 }
