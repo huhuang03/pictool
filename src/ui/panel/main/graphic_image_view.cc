@@ -126,7 +126,12 @@ void GraphicImageView::updateImageBySelect(QRectF selectRect) {
   auto heightScale = dstSize.height() / rect.height();
 
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
   auto scale = min(widthScale, heightScale);
+#else
+  auto scale = std::min(widthScale, heightScale);
+#endif
+
   QTransform trans = QTransform().translate(-rect.x(), -rect.y())
       * QTransform().scale(scale, scale);
   this->setTransform(trans);

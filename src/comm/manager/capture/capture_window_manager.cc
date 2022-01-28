@@ -2,6 +2,7 @@
 // Created by huhua on 2021/8/20.
 //
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include "pictool/internal/capture_window_manager.h"
 #include <Windows.h>
 #include <iostream>
@@ -140,3 +141,5 @@ void CaptureWindowManager::_start() {
         Sleep(200);
     }
 }
+
+#endif

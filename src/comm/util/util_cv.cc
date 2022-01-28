@@ -17,7 +17,7 @@ void QImage2Mat(const QImage &src, const cv::_OutputArray &out) {
       format = CV_8UC4;
       break;
     default:
-      throw std::exception(("UnSupport src format: " + std::to_string(src.format())).c_str());
+      throw std::runtime_error("UnSupport src format: " + std::to_string(src.format()));
   }
   cv::Mat share(src.height(), src.width(), format, (void *)src.bits(), src.bytesPerLine());
   if (src.format() == QImage::Format_RGB888) {

@@ -42,7 +42,7 @@ App::App(): panelMain(new MainPanel) {
 }
 
 void App::clickedCaptureWindow() {
-    CaptureWindowManager::inst()->start();
+//    CaptureWindowManager::inst()->start();
 }
 
 void App::createActions() {

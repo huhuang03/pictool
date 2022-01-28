@@ -5,6 +5,7 @@
 #ifndef PIC_TOOL_CAPTURE_WINDOW_MANAGER_H
 #define PIC_TOOL_CAPTURE_WINDOW_MANAGER_H
 
+#if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
 #include <Windows.h>
 
 // need single instance?
@@ -39,6 +40,7 @@ private:
     void _doCaptureInner();
     void stop();
 };
+#endif
 
 
 #endif //PIC_TOOL_CAPTURE_WINDOW_MANAGER_H
