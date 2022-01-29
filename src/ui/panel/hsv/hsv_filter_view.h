@@ -6,7 +6,7 @@
 #define PIC_TOOL_HSV_FILTER_VIEW_H
 #include <QtWidgets>
 #include <QWidget>
-#include "../range-slider/RangeSlider.h"
+#include "../../../components/range-slider/RangeSlider.h"
 #include <easybot/model/hsv_range.h>
 
 class HSVFilterView: public QWidget {

@@ -29,11 +29,9 @@ private slots:
 public:
     explicit MainPanel(QWidget *parent = nullptr);
 
-    void loadImage(cv::Mat pImg);
+    void loadImage(cv::Mat pImg, bool clear = false);
 
     void addImgAlter(ImgAlerter alerter);
-
-    void updateImg();
 
 private:
   QLabel *lbStatus;

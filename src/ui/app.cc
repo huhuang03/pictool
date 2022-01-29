@@ -100,19 +100,26 @@ void App::open() {
 
 void App::loadImage(const std::string &path) {
   // did you real convert it?
-  auto img = cv::imread(path);
+  auto _img = cv::imread(path);
   // f**k, look's like that still has the alpha channel
 
   // I want remove alpha
-  if (img.empty()) {
+  if (_img.empty()) {
       qDebug() << "why img is empty";
       return;
   }
-  panelMain->loadImage(img);
+  this->img = _img;
+  panelMain->loadImage(img, true);
 }
 
 void App::onHsvRangeChanged(eb::HSVRange hsvRange) {
 //    std::cout << "hsvRange: " << hsvRange << std::endl;
-    this->panelMain->updateImg();
+//    this->panelMain->updateImg();
+  cv::Mat out;
+//  hsvRange.work(this->img, out);
+//  cv::imshow("origin", this->img);
+//  cv::imshow("test", out);
+  // ok, what's the image?
+  // 奇怪，怎么会影响this->img?
+  panelMain->loadImage(this->img, false);
 }
-

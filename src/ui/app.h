@@ -11,7 +11,7 @@
 
 #include <opencv2/opencv.hpp>
 #include <easybot/model/hsv_range.h>
-#include "../components/hsv_filter/hsv_filter_view.h"
+#include "panel/hsv/hsv_filter_view.h"
 
 // I think you can find the QApplication your self.
 class App: public QMainWindow {
@@ -29,15 +29,14 @@ private slots:
 
 private:
     static App* _inst;
-
     void createDockers();
     void createActions();
     void createMenu();
     MainPanel *panelMain;
     HSVFilterView *hsvFilterView;
-
-
+    cv::Mat img;
     // helper method
+
 private:
     void loadImage(const std::string &path);
 };

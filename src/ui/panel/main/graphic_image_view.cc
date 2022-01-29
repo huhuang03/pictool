@@ -49,10 +49,6 @@ void GraphicImageView::setQImage(const QImage &img) {
 
 void GraphicImageView::setPixmap(const QPixmap &pixmap) {
   this->item->setPixmap(pixmap);
-  this->_history.clear();
-  this->_history.emplace_back(pixmap.rect());
-  this->index = 0;
-  this->handleHistoryChanged();
 }
 
 void GraphicImageView::mouseDoubleClickEvent(QMouseEvent *event) {
@@ -151,8 +147,17 @@ void GraphicImageView::backward() {
   }
 }
 
-void GraphicImageView::setImage(const cv::Mat &mat) {
+void GraphicImageView::setImage(const cv::Mat &mat, bool clear) {
     this->_img = mat;
+    // will here throw an exception?
+    if (clear) {
+      this->_history.clear();
+
+      // f**k hwo to do this?
+      this->_history.emplace_back(QRectF(0, 0, mat.cols, mat.rows));
+      this->index = 0;
+      this->handleHistoryChanged();
+    }
     this->setQImage(QImage((unsigned char *) mat.data, mat.cols, mat.rows, mat.step, QImage::Format_RGB888));
 }
 

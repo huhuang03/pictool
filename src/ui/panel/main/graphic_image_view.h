@@ -69,7 +69,7 @@ class GraphicImageView: public QGraphicsView {
   explicit GraphicImageView(QWidget *parent = nullptr);
 
   void setQImage(const QImage &img);
-  void setImage(const cv::Mat &mat);
+  void setImage(const cv::Mat &mat, bool clear = true);
 
   inline void setMode(OpMode _mode) {
     this->mode = _mode;

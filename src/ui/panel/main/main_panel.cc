@@ -30,22 +30,17 @@ MainPanel::MainPanel(QWidget *parent) : QWidget(parent)
   connect(this->btNext, &QToolButton::clicked, centerImage, &GraphicImageView::forward);
   connect(this->btPre, &QToolButton::clicked, centerImage, &GraphicImageView::backward);
 
-  this->updateHistoryUI(); }
+  this->updateHistoryUI();
+}
 
-void MainPanel::loadImage(cv::Mat img) {
+void MainPanel::loadImage(cv::Mat img, bool clear) {
   this->originImg = std::move(img);
-  this->updateImg();
-}
 
-void MainPanel::addImgAlter(ImgAlerter alerter) {
-  this->alters.push_back(alerter);
-}
-
-void MainPanel::updateImg() {
   if (this->originImg.empty()) {
     return;
   }
 
+  // actually, you should not care about the alter.
   cv::Mat curImg = this->originImg;
   for (const auto &alter : this->alters) {
     cv::Mat outImg;
@@ -54,7 +49,11 @@ void MainPanel::updateImg() {
   }
 
   // hwo can I print the image data type?
-  this->centerImage->setImage(curImg);
+  this->centerImage->setImage(curImg, clear);
+}
+
+void MainPanel::addImgAlter(ImgAlerter alerter) {
+  this->alters.push_back(alerter);
 }
 
 void MainPanel::initToolLayout(QLayout *parentLayout) {
