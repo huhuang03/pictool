@@ -12,6 +12,7 @@
 #include <opencv2/opencv.hpp>
 #include <easybot/model/hsv_range.h>
 #include "panel/hsv/hsv_filter_view.h"
+#include "panel/recently/recently_panel.h"
 
 // I think you can find the QApplication your self.
 class App: public QMainWindow {
@@ -34,8 +35,8 @@ private:
     void createMenu();
     MainPanel *panelMain;
     HSVFilterView *hsvFilterView;
+    RecentlyPanel *panelRecent;
     cv::Mat img;
-    // helper method
 
 private:
     void loadImage(const std::string &path);

@@ -9,6 +9,7 @@
 #include <vector>
 #include <boost/filesystem.hpp>
 #include <opencv2/opencv.hpp>
+#include "./panel/recently/recently_panel.h"
 
 App* App::_inst = nullptr;
 QtAwesome *App::awesome = nullptr;
@@ -26,6 +27,7 @@ static std::string getDefaultImgPath() {
 App::App(): panelMain(new MainPanel) {
     settingInit(this);
     App::_inst = this;
+    this->panelRecent = new RecentlyPanel();
     setCentralWidget(this->panelMain);
 
     this->createActions();
@@ -35,10 +37,6 @@ App::App(): panelMain(new MainPanel) {
     auto path = getDefaultImgPath();
 
     this->loadImage(path);
-
-    this->panelMain->addImgAlter([this](cv::InputArray src, cv::OutputArray dst) {
-        this->hsvFilterView->range().work(src, dst);
-    });
 }
 
 void App::clickedCaptureWindow() {
@@ -49,11 +47,16 @@ void App::createActions() {
 }
 
 void App::createDockers() {
-    auto dockHsvFilter = new QDockWidget(tr("hsv"), this);
-    this->hsvFilterView = new HSVFilterView();
-    dockHsvFilter->setWidget(hsvFilterView);
-    addDockWidget(Qt::BottomDockWidgetArea, dockHsvFilter);
-    connect(hsvFilterView, &HSVFilterView::hsvRangeChange, this, &App::onHsvRangeChanged);
+  auto dockHsvFilter = new QDockWidget(tr("hsv"), this);
+  this->hsvFilterView = new HSVFilterView();
+  dockHsvFilter->setWidget(hsvFilterView);
+  addDockWidget(Qt::BottomDockWidgetArea, dockHsvFilter);
+  connect(hsvFilterView, &HSVFilterView::hsvRangeChange, this, &App::onHsvRangeChanged);
+
+  auto dockerRecently = new QDockWidget(tr("recently"), this);
+  dockerRecently->setWidget(this->panelRecent);
+  addDockWidget(Qt::RightDockWidgetArea, dockerRecently);
+  connect(this->panelRecent, &RecentlyPanel::onChoice, this, &App::loadImage);
 }
 
 void App::createMenu() {
@@ -96,30 +99,25 @@ void App::open() {
 
     std::cout << "imgFilePath " << imgFilePath.toStdString() << std::endl;
     this->loadImage(imgFilePath.toStdString());
+    this->panelRecent->add(imgFilePath.toStdString());
 }
 
 void App::loadImage(const std::string &path) {
   // did you real convert it?
   auto _img = cv::imread(path);
-  // f**k, look's like that still has the alpha channel
 
   // I want remove alpha
   if (_img.empty()) {
-      qDebug() << "why img is empty";
       return;
   }
+  // this not work?
   this->img = _img;
   panelMain->loadImage(img, true);
 }
 
 void App::onHsvRangeChanged(eb::HSVRange hsvRange) {
-//    std::cout << "hsvRange: " << hsvRange << std::endl;
-//    this->panelMain->updateImg();
   cv::Mat out;
-//  hsvRange.work(this->img, out);
-//  cv::imshow("origin", this->img);
-//  cv::imshow("test", out);
-  // ok, what's the image?
-  // 奇怪，怎么会影响this->img?
-  panelMain->loadImage(this->img, false);
+  hsvRange.work(this->img, out);
+  // how can I debug you?
+  panelMain->loadImage(out, false);
 }

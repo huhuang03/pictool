@@ -31,16 +31,11 @@ public:
 
     void loadImage(cv::Mat pImg, bool clear = false);
 
-    void addImgAlter(ImgAlerter alerter);
-
 private:
   QLabel *lbStatus;
-  cv::Mat originImg;
-  QImage *qImg;
   QToolButton *btPre;
   QToolButton *btNext;
   GraphicImageView *centerImage;
-  std::vector<ImgAlerter> alters;
 
   void initToolLayout(QLayout *parentLayout);
 };

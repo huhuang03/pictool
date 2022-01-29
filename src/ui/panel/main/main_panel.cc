@@ -33,29 +33,6 @@ MainPanel::MainPanel(QWidget *parent) : QWidget(parent)
   this->updateHistoryUI();
 }
 
-void MainPanel::loadImage(cv::Mat img, bool clear) {
-  this->originImg = std::move(img);
-
-  if (this->originImg.empty()) {
-    return;
-  }
-
-  // actually, you should not care about the alter.
-  cv::Mat curImg = this->originImg;
-  for (const auto &alter : this->alters) {
-    cv::Mat outImg;
-    alter(curImg, outImg);
-    curImg = outImg;
-  }
-
-  // hwo can I print the image data type?
-  this->centerImage->setImage(curImg, clear);
-}
-
-void MainPanel::addImgAlter(ImgAlerter alerter) {
-  this->alters.push_back(alerter);
-}
-
 void MainPanel::initToolLayout(QLayout *parentLayout) {
   auto container = new QWidget();
   auto layoutTools = new QHBoxLayout(container);
@@ -83,6 +60,18 @@ void MainPanel::initToolLayout(QLayout *parentLayout) {
   layoutTools->addWidget(this->lbStatus);
 
   parentLayout->addWidget(container);
+}
+
+void MainPanel::loadImage(cv::Mat img, bool clear) {
+  if (img.empty()) {
+    return;
+  }
+  cv::Mat copy;
+  // will have some effect if no copy.
+  img.copyTo(copy);
+
+  // hwo can I print the image data type?
+  this->centerImage->setImage(copy, clear);
 }
 
 
