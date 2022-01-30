@@ -27,9 +27,6 @@ class HSVFilterView : public QWidget {
   HsvFilterItemView *h;
   HsvFilterItemView *s;
   HsvFilterItemView *v;
-//  RangeSlider *h;
-//  RangeSlider *s;
-//  RangeSlider *v;
   eb::HSVRange hsvRange;
 
   // helper method

@@ -10,10 +10,10 @@ HSVFilterView::HSVFilterView(QWidget *parent)
   // 不能这么干吗？
   // 因为this还没有初始化完成，所以不能使用引用&this->h?
   auto *layout = new QVBoxLayout(this);
-  this->h = createRangeSlider(layout, eb::HSV::H_MIN, eb::HSV::H_MAX, "h: ");
+  this->h = createRangeSlider(layout, eb::HSV::H_MIN, eb::HSV::H_MAX, "h");
   this->h->getRangerSlider()->SetCanOver(true);
-  this->s = createRangeSlider(layout, eb::HSV::S_MIN, eb::HSV::S_MAX, "s: ");
-  this->v = createRangeSlider(layout, eb::HSV::V_MIN, eb::HSV::V_MAX, "v: ");
+  this->s = createRangeSlider(layout, eb::HSV::S_MIN, eb::HSV::S_MAX, "s");
+  this->v = createRangeSlider(layout, eb::HSV::V_MIN, eb::HSV::V_MAX, "v");
 
   connect(this->h, &HsvFilterItemView::onChange, this, &HSVFilterView::handleSingleHSVChanged);
   connect(this->s, &HsvFilterItemView::onChange, this, &HSVFilterView::handleSingleHSVChanged);
@@ -21,9 +21,12 @@ HSVFilterView::HSVFilterView(QWidget *parent)
 }
 
 eb::HSVRange HSVFilterView::range() {
+  auto _h = this->h->getRangerSlider();
+  auto _s = this->s->getRangerSlider();
+  auto _v = this->v->getRangerSlider();
   return eb::HSVRange(
-      eb::HSV(this->h->GetLowerValue(), this->s->GetLowerValue(), this->v->GetLowerValue()),
-      eb::HSV(this->h->GetUpperValue(), this->s->GetUpperValue(), this->v->GetUpperValue()));
+      eb::HSV(_h->GetLowerValue(), _s->GetLowerValue(), _v->GetLowerValue()),
+      eb::HSV(_h->GetUpperValue(), _s->GetUpperValue(), _v->GetUpperValue()));
 }
 
 void HSVFilterView::handleSingleHSVChanged(int lower, int upper) {
@@ -35,16 +38,6 @@ void HSVFilterView::handleSingleHSVChanged(int lower, int upper) {
 }
 
 HsvFilterItemView *HSVFilterView::createRangeSlider(QLayout *layout, int min, int max, const std::string &title) {
-//  auto container = new QWidget();
-//  auto cLayout = new QHBoxLayout(container);
-//  auto label = new QLabel(title);
-//  label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
-//  cLayout->addWidget(label);
-//
-//  auto rst = new RangeSlider();
-//  rst->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-//  rst->SetRange(min, max);
-//  cLayout->addWidget(rst);
   auto rst = new HsvFilterItemView(title, min, max);
 
   layout->addWidget(rst);

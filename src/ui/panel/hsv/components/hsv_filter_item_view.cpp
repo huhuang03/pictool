@@ -13,18 +13,19 @@ HsvFilterItemView::HsvFilterItemView(const std::string &title, int min, int max)
   auto container = new QWidget();
   auto cLayout = new QHBoxLayout(container);
   this->label = new QLabel();
+  this->label->setMinimumWidth(60);
   label->setSizePolicy(QSizePolicy::Minimum, QSizePolicy::Preferred);
   cLayout->addWidget(label);
 
-  auto rst = new RangeSlider();
-  rst->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-  rst->SetRange(min, max);
-  cLayout->addWidget(rst);
+  this->rs = new RangeSlider();
+  rs->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
+  rs->SetRange(min, max);
+  cLayout->addWidget(rs);
 
   this->setLayout(cLayout);
   this->updateLabel(min, max);
 
-  this->connect(rst, &RangeSlider::valueChanged, this, &HsvFilterItemView::handleChange);
+  this->connect(rs, &RangeSlider::valueChanged, this, &HsvFilterItemView::handleChange);
 }
 
 void HsvFilterItemView::updateLabel(int lower, int upper) {
