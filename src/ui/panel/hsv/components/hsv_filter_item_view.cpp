@@ -38,3 +38,7 @@ void HsvFilterItemView::handleChange(int lower, int upper) {
   this->updateLabel(lower, upper);
   emit onChange(lower, upper);
 }
+
+RangeSlider *HsvFilterItemView::getRangerSlider() {
+  return this->rs;
+}

@@ -8,6 +8,8 @@
 #include <QWidget>
 #include "../../../components/range-slider/RangeSlider.h"
 #include <easybot/model/hsv_range.h>
+#include "./components/hsv_filter_item_view.h"
+#include <string>
 
 class HSVFilterView : public QWidget {
  Q_OBJECT
@@ -22,14 +24,17 @@ class HSVFilterView : public QWidget {
   void handleSingleHSVChanged(int lower, int upper);
 
  private:
-  RangeSlider *h;
-  RangeSlider *s;
-  RangeSlider *v;
+  HsvFilterItemView *h;
+  HsvFilterItemView *s;
+  HsvFilterItemView *v;
+//  RangeSlider *h;
+//  RangeSlider *s;
+//  RangeSlider *v;
   eb::HSVRange hsvRange;
 
   // helper method
  private:
-  RangeSlider *createRangeSlider(QLayout *layout, int min, int max, const QString &title);
+  HsvFilterItemView *createRangeSlider(QLayout *layout, int min, int max, const std::string &title);
 };
 
 #endif //PIC_TOOL_HSV_FILTER_VIEW_H
