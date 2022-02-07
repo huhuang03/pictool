@@ -119,6 +119,6 @@ void App::onHsvRangeChanged(eb::HSVRange hsvRange) {
   cv::Mat out;
   hsvRange.work(this->img, out);
   // how can I debug you?
-  cv::imshow("out", out);
+//  cv::imshow("out", out);
   panelMain->loadImage(out, false);
 }
