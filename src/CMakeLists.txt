@@ -17,3 +17,5 @@ add_executable(pictool ${SRC_LIB} main.cc)
 
 # so the link library can pass?
 target_link_libraries(pictool pictool_lib)
+
+install(TARGETS pictool)

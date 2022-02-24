@@ -25,7 +25,8 @@ void RecentlyPanel::updateUI() {
   this->listWidget->clear();
   for (const auto &item: this->paths) {
     boost::filesystem::path p(item);
-    this->listWidget->addItem(QString(p.filename().c_str()));
+    // any better idea?
+    this->listWidget->addItem(QString(p.filename().string().c_str()));
   }
 }
 

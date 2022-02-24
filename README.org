@@ -1,20 +1,5 @@
 * TODOS
-** bug
-dst size:  QSize(800, 600) , selectSize:  QRectF(0,0 1217x730)
-pos:  QPoint(1056,125)
-OpenCV(4.5.2) Error: Assertion failed ((unsigned)(i1 * DataType<_Tp>::channels) < (unsigned)(size.p[1] * channels())) in
- cv::Mat::at, file D:\source\vcpkg\installed\x64-windows\include\opencv2/core/mat.inl.hpp, line 872
-OpenCV: terminate handler is called! The last OpenCV error is:
-OpenCV(4.5.2) Error: Assertion failed ((unsigned)(i1 * DataType<_Tp>::channels) < (unsigned)(size.p[1] * channels())) in
- cv::Mat::at, file D:\source\vcpkg\installed\x64-windows\include\opencv2/core/mat.inl.hpp, line 872
-
-** add history ability
-** And any better idea to handle the very small image.
-
-
-
-** persistant the opened image path. with search.
-
+** better install
 ** crop the image.
 ** scale the img, with show the guide line, if big enough
 
