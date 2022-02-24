@@ -2,6 +2,7 @@
 // Created by huhua on 2021/8/20.
 //
 
+#include <QMessageBox>
 #include <pictool/internal/util.h>
 
 #if defined(WIN32) || defined(_WIN32) || defined(__WIN32) && !defined(__CYGWIN__)
@@ -17,6 +18,12 @@ unsigned long ms() {
   return time_ms;
 #endif
   return 0;
+}
+
+void blockPrompt(const std::string& msg) {
+  QMessageBox msgBox;
+  msgBox.setText(QString(msg.c_str()));
+  msgBox.exec();
 }
 
 }

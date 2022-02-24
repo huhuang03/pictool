@@ -27,9 +27,14 @@ private slots:
   void updateHistoryUI();
 
 public:
-    explicit MainPanel(QWidget *parent = nullptr);
+  explicit MainPanel(QWidget *parent = nullptr);
 
-    void loadImage(cv::Mat pImg, bool clear = false);
+  void loadImage(cv::Mat pImg, bool clear = false);
+
+  /**
+   * @return 获取截取的区间
+   */
+  QRect getCropRegion();
 
 private:
   QLabel *lbStatus;

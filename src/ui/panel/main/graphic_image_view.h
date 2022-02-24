@@ -85,6 +85,13 @@ class GraphicImageView: public QGraphicsView {
 
   void move(const std::stack<QRectF> &from, std::stack<QRectF> &to);
 
+  QRectF getCurrentRect() {
+    if (this->index >= 0 && this->index < this->_history.size()) {
+      return this->_history[this->index];
+    }
+    return QRectF();
+  }
+
  public slots:
   void forward();
   void backward();

@@ -27,6 +27,8 @@ private slots:
     void clickedCaptureWindow();
     void open();
     void onHsvRangeChanged(eb::HSVRange hsvRange);
+    void crop();
+    void find();
 
 private:
     static App* _inst;

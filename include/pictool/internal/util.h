@@ -17,5 +17,7 @@ namespace pt {
     std::stack<QRectF> empty;
     s.swap(empty);
   }
+
+  void blockPrompt(const std::string& msg);
 }
 #endif //PIC_TOOL_UTIL_H

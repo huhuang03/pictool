@@ -92,3 +92,7 @@ void MainPanel::updateHistoryUI() {
   this->btNext->setEnabled(this->centerImage->canForward());
   this->btPre->setEnabled(this->centerImage->canBackward());
 }
+
+QRect MainPanel::getCropRegion() {
+  return this->centerImage->getCurrentRect().toRect();
+}
