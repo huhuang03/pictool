@@ -98,7 +98,7 @@ void App::open() {
       tr("Open an image file"),
       QString::fromUtf8(dir.c_str()),
       // for only we only bmp image.
-      tr("Image Files(*.bmp)"));
+      tr("Image Files(*.bmp, *.jpg, *.png)"));
 
   // I want save the previous select image, how to do it?
   if (imgFilePath.isNull()) {
